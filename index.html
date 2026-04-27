@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhóm 5 - Thí Nghiệm Lên Men Dưa Chua</title>
+    <link rel="icon" href="https://files.catbox.moe/61dbof.jpg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+
+    <style>
+        :root {
+            /* MÀU SẮC WHITE GLASSMORPHISM CAO CẤP */
+            --glass-bg: rgba(255, 255, 255, 0.65); 
+            --glass-border: rgba(255, 255, 255, 0.9); 
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); 
+            --glass-blur: blur(25px); 
+            
+            --accent-green: #10b981; 
+            --accent-cyan: #0ea5e9;  
+            --accent-yellow: #f59e0b;
+            
+            --text-primary: #0f172a; 
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        
+        body { 
+            font-family: 'Be Vietnam Pro', sans-serif; 
+            color: var(--text-primary); 
+            display: flex; flex-direction: column; position: relative;
+            background: linear-gradient(-45deg, #e0f2fe, #f0fdf4, #f8fafc, #dcfce3);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .circle-decor { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; opacity: 0.6; }
+        .circle-1 { width: 450px; height: 450px; background: #6ee7b7; top: -50px; left: -50px; animation: float 10s infinite alternate; }
+        .circle-2 { width: 500px; height: 500px; background: #bae6fd; bottom: -100px; right: 5%; animation: float 15s infinite alternate-reverse; }
+        .circle-3 { width: 400px; height: 400px; background: #fbcfe8; top: 30%; left: 40%; animation: float 12s infinite alternate; }
+        @keyframes float { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(50px) scale(1.1); } }
+
+        /* Màn hình Bắt đầu */
+        #startScreen {
+            position: fixed; inset: 0; 
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.8), rgba(220, 252, 227, 0.8)); 
+            backdrop-filter: blur(20px); z-index: 10000; display: flex; justify-content: center; align-items: center;
+        }
+        .start-card {
+            background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 32px;
+            padding: 60px 40px; box-shadow: 0 25px 50px rgba(16, 185, 129, 0.1); text-align: center;
+            max-width: 900px; width: 90%; display: flex; flex-direction: column; align-items: center;
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+        .start-card img { width: 150px; height: 150px; border-radius: 50%; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 25px; border: 5px solid white; object-fit: cover;}
+        .start-card h1 { font-size: 4rem; color: var(--accent-green); margin-bottom: 15px; text-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); line-height: 1.2; }
+        .start-card p { font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.6; font-weight: 500; max-width: 700px; }
+
+        .pulse-btn {
+            padding: 18px 50px; font-size: 1.4rem; font-weight: 800; color: white; 
+            background: linear-gradient(135deg, var(--accent-green), #34d399);
+            border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s; font-family: 'Be Vietnam Pro', sans-serif; animation: pulse-glow 2s infinite;
+        }
+        .pulse-btn:hover { transform: scale(1.05); }
+
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .glass-box { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: var(--glass-shadow); }
+
+        .navbar { position: relative; z-index: 100; height: 70px; display: flex; align-items: center; padding: 0 30px; gap: 40px; border-radius: 0 0 24px 24px; border-top: none; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent-green); display: flex; align-items: center; gap: 10px; min-width: 200px; text-transform: uppercase; letter-spacing: 1px;}
+        .logo img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-green);}
+        .nav-tabs { display: flex; gap: 10px; flex: 1; }
+        .nav-tab { padding: 8px 18px; border-radius: 12px; background: rgba(255,255,255,0.5); border: 1px solid transparent; color: var(--text-secondary); font-family: 'Be Vietnam Pro', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .nav-tab:hover { background: white; color: var(--text-primary); border-color: white; }
+        .nav-tab.active { background: white; color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .nav-right { margin-left: auto; }
+        .nav-icon-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.6); border: 1px solid white; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;}
+        .nav-icon-btn:hover { background: white; color: var(--accent-green); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        .main-container { display: flex; flex: 1; gap: 20px; padding: 20px; overflow: hidden; position: relative; z-index: 10; }
+        .sidebar { width: 280px; padding: 25px; display: flex; flex-direction: column; gap: 25px; overflow: hidden; }
+        .dashboard-section { display: flex; flex-direction: column; gap: 12px; }
+        .dashboard-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-cyan); }
+        
+        .progress-ring { width: 120px; height: 120px; margin: 0 auto 5px; }
+        .progress-circle { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 8; }
+        .progress-circle-fill { fill: none; stroke: var(--accent-green); stroke-width: 8; stroke-linecap: round; transform-origin: center; transform: rotate(-90deg); transition: stroke-dasharray 0.5s ease-out; }
+        .progress-text { text-align: center; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;}
+        .progress-percent { font-size: 1.6rem; font-weight: 900; color: var(--accent-green); }
+        
+        .slide-info-item { background: rgba(255,255,255,0.7); padding: 12px 16px; border-radius: 14px; border: 1px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .slide-info-label { color: var(--text-muted); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; }
+        .slide-info-value { color: var(--text-primary); font-weight: 800; font-size: 0.95rem; }
+
+        .center-wrapper { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 24px; }
+        .glass-panel { width: 100%; height: 100%; padding: 30px 50px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; visibility: hidden; transform: scale(0.97) translateY(20px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; overflow: hidden; }
+        .glass-panel.active { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
+        .slide-content-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .active .anim-1 { animation: fadeUp 0.6s 0.1s forwards; opacity: 0; }
+        .active .anim-2 { animation: fadeUp 0.6s 0.2s forwards; opacity: 0; }
+        .active .anim-3 { animation: fadeUp 0.6s 0.3s forwards; opacity: 0; }
+        .active .anim-4 { animation: fadeUp 0.6s 0.4s forwards; opacity: 0; }
+
+        h1 { font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--text-primary); }
+        h2 { font-size: 1.8rem; font-weight: 800; text-align: center; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .icon-grad { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); color: var(--accent-green); font-size: 1.3rem; }
+
+        .intro-text { text-align: center; max-width: 850px; margin: 0 auto 15px; font-weight: 500; font-size: 1.05rem; line-height: 1.6; color: var(--text-secondary); }
+        .team-members { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .member-badge { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); color: white; padding: 8px 18px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(16,185,129,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s; cursor: default;}
+        .member-badge:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
+
+        .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 1000px; }
+        .steps-grid .step-item:last-child { grid-column: 1 / -1; width: 60%; margin: 0 auto; }
+        .step-item { display: flex; gap: 15px; align-items: flex-start; padding: 18px 22px; background: rgba(255,255,255,0.7); border: 1px solid white; border-radius: 16px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .step-item:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(16,185,129,0.1); }
+        .step-number { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-green); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; color: white; flex-shrink: 0; }
+        .step-text { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.5; padding-top: 5px; font-weight: 600; }
+
+        /* Video & Audio elements */
+        .video-container { width: 100%; max-width: 850px; height: 48vh; background: #000; border-radius: 16px; border: 4px solid white; box-shadow: 0 15px 30px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+        video { width: 100%; height: 100%; object-fit: contain; outline: none; transition: filter 1s ease, opacity 1s ease; }
+        .video-blurred { filter: blur(20px) grayscale(30%); opacity: 0.6; pointer-events: none; }
+        audio { display: none; }
+
+        table { width: 100%; max-width: 950px; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; border: 1px solid white; background: rgba(255,255,255,0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        th, td { padding: 16px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); border-right: 1px solid rgba(0,0,0,0.05); }
+        th:last-child, td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+        th { background: rgba(255,255,255,0.9); color: var(--text-primary); font-weight: 800; font-size: 1rem; text-transform: uppercase; }
+        td { color: var(--text-secondary); font-size: 1rem; font-weight: 600; transition: 0.3s; }
+        tr:hover td { background: white; color: var(--text-primary); }
+        
+        .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 1150px; align-items: stretch; }
+        .qa-item { background: rgba(255,255,255,0.7); border: 1px solid white; border-top: 4px solid var(--accent-green); border-radius: 16px; padding: 20px; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .qa-item:hover { background: white; transform: translateY(-5px); box-shadow: 0 10px 25px rgba(16,185,129,0.1); }
+        .qa-question { font-weight: 800; color: var(--text-primary); font-size: 0.95rem; line-height: 1.4; display: flex; flex-direction: column; gap: 8px; }
+        .qa-question::before { content: 'Câu hỏi'; display: inline-flex; width: max-content; background: var(--accent-green); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+        .qa-answer { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; font-weight: 500;}
+        .qa-answer b { color: var(--text-primary); font-weight: 800;}
+
+        .end-icon { font-size: 6rem; text-align: center; margin-bottom: 20px; display: block; color: var(--accent-green); text-shadow: 0 10px 20px rgba(16,185,129,0.3); }
+        .footer-credit { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.85rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+
+        .ingredient-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
+        .tag { background: rgba(255,255,255,0.8); padding: 8px 18px; border-radius: 50px; border: 1px solid white; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .tag:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(16,185,129,0.1);}
+        .tag-green i { color: #10b981; } .tag-orange i { color: #f59e0b; } .tag-blue i { color: #0ea5e9; } .tag-yellow i { color: #eab308; }
+
+        .controls { position: fixed; bottom: 25px; right: 25px; display: flex; align-items: center; gap: 12px; z-index: 200; padding: 12px 25px; border-radius: 50px; background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); border: 1px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .btn { background: transparent; border: none; color: var(--text-secondary); font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 12px; transition: 0.3s; }
+        .btn:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); transform: translateY(-2px); }
+        .btn-primary { background: var(--accent-green); color: white !important; padding: 10px 25px; border-radius: 30px; }
+        .btn-primary:hover { background: #059669; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
+        .timer-bar { width: 120px; height: 8px; background: rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden; }
+        .timer-fill { height: 100%; width: 100%; background: var(--accent-green); transform-origin: left; transition: transform 0.1s linear; }
+        .time-text { font-size: 0.9rem; font-weight: 800; color: var(--accent-green); min-width: 45px; text-align: right; }
+        .slide-counter { position: fixed; bottom: 30px; left: 30px; font-size: 0.9rem; font-weight: 800; color: var(--text-secondary); z-index: 200; padding: 8px 18px; border-radius: 15px; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border: 1px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+
+        /* Modals */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); z-index: 9000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { width: 90%; max-width: 850px; max-height: 85vh; padding: 35px; overflow-y: auto; transform: scale(0.9); transition: 0.3s; background: rgba(255,255,255,0.95); border: 1px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 24px; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
+        .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .modal-title i { color: var(--accent-cyan); }
+        .close-btn { background: rgba(0,0,0,0.05); border: none; width: 40px; height: 40px; border-radius: 10px; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;}
+        .close-btn:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .overview-item { background: rgba(255,255,255,0.5); border: 1px solid white; border-radius: 16px; padding: 25px 20px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .overview-item:hover { background: white; border-color: var(--accent-cyan); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(14,165,233,0.1); }
+        .overview-number { font-size: 2rem; font-weight: 900; color: var(--accent-cyan); }
+        .overview-title-text { font-weight: 700; color: var(--text-primary); font-size: 1rem; }
+
+        .settings-group { margin-bottom: 20px; }
+        .settings-group label { display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .settings-group input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); background: white; color: var(--text-primary); font-family: 'Be Vietnam Pro', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; }
+        .settings-group input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="circle-decor circle-1"></div>
+    <div class="circle-decor circle-2"></div>
+    <div class="circle-decor circle-3"></div>
+
+    <div id="startScreen">
+        <div class="start-card">
+            <img src="https://files.catbox.moe/61dbof.jpg" alt="Logo">
+            <h1>Thí Nghiệm Lên Men Dưa Chua</h1>
+            <p>Báo cáo thực hành môn Sinh Học<br><b>Nhấn Bắt Đầu</b> để hệ thống tự động chạy trình chiếu kết hợp giọng đọc thuyết minh và video mô phỏng.</p>
+            <button id="startBtn" class="pulse-btn" onclick="startPresentation()">Bắt Đầu Trình Chiếu <i class="fas fa-play" style="margin-left: 8px;"></i></button>
+        </div>
+    </div>
+
+    <!-- Modal Tổng Quan -->
+    <div class="modal-overlay" id="overviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-layer-group"></i> Tổng Quan Slides</div>
+                <button class="close-btn" onclick="closeModal('overviewModal')"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="overview-grid" id="overviewGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal Cài Đặt -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-gear"></i> Cài Đặt Nguồn Video</div>
+                <button class="close-btn" onclick="closeModal('settingsModal')"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-group">
+                    <label>Link Video Thực Hành (Slide 3):</label>
+                    <input type="text" id="inputVid1" value="https://files.catbox.moe/i6nhjk.mp4">
+                </div>
+                <div class="settings-group">
+                    <label>Link Nhạc/Âm thanh (Slide 3):</label>
+                    <input type="text" id="inputAud1" value="https://files.catbox.moe/jhi1g7.mp3">
+                </div>
+                <div class="settings-group">
+                    <label>Link Video Đánh Giá (Slide 5):</label>
+                    <input type="text" id="inputVid2" value="https://files.catbox.moe/91hic7.mp4">
+                </div>
+                <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; font-size: 1.1rem;" onclick="saveSettings()">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar glass-box">
+        <div class="logo"><img src="https://files.catbox.moe/61dbof.jpg" alt="Logo"> NHÓM 5</div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="activateTab(this); closeModal('overviewModal'); closeModal('settingsModal');"><i class="fas fa-desktop"></i> Thuyết Trình</button>
+            <button class="nav-tab" onclick="activateTab(this); openModal('overviewModal');"><i class="fas fa-border-all"></i> Tổng Quan</button>
+            <button class="nav-tab" onclick="activateTab(this); openModal('settingsModal');"><i class="fas fa-sliders"></i> Cài Đặt</button>
+        </div>
+        <div class="nav-right">
+            <button class="nav-icon-btn" title="Toàn màn hình" onclick="toggleFullScreen()"><i class="fas fa-expand"></i></button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="sidebar glass-box">
+            <div class="dashboard-section">
+                <div class="dashboard-title">Tiến Độ</div>
+                <svg class="progress-ring" viewBox="0 0 140 140">
+                    <circle cx="70" cy="70" r="60" class="progress-circle"></circle>
+                    <circle cx="70" cy="70" r="60" class="progress-circle-fill" id="progressFill"></circle>
+                </svg>
+                <div class="progress-text"><div class="progress-percent" id="progressPercent">0%</div></div>
+            </div>
+
+            <div class="dashboard-section">
+                <div class="dashboard-title">Trạng Thái Slide</div>
+                <div class="slide-info-item">
+                    <div class="slide-info-label">Đang chiếu slide</div>
+                    <div class="slide-info-value" id="slideNumber">1 / 8</div>
+                </div>
+                <div class="slide-info-item" style="background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.2);">
+                    <div class="slide-info-label" style="color: var(--accent-cyan);">Hoạt động</div>
+                    <div class="slide-info-value" id="slideStatus" style="color: var(--text-primary);">Đang nạp...</div>
+                </div>
+            </div>
+
+            <div class="dashboard-section" style="margin-top: auto;">
+                <div class="dashboard-title">Thực Hiện Bởi</div>
+                <div class="slide-info-item" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.2);">
+                    <div class="slide-info-value" style="color: var(--accent-green); text-align: center; font-size: 1.2rem; letter-spacing: 2px;"><i class="fas fa-users"></i> NHÓM 5</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-wrapper">
+            
+            <!-- Slide 1 -->
+            <div class="slide glass-panel active">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298343020-77c1cbf9-5314-4391-a52c-1e0509b24b34.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h1 class="anim-1"><span class="icon-grad" style="margin: 0 auto 10px; width:70px; height:70px; border-radius:24px; font-size:2.2rem; background: var(--accent-green); color: white; border: none;"><i class="fas fa-flask-vial"></i></span><br>Báo Cáo Thực Hành Sinh Học</h1>
+                    <h2 class="anim-2" style="font-size:1.7rem; color: var(--accent-cyan); margin-bottom: 10px;">Dự Án: Thí Nghiệm Lên Men Dưa Chua</h2>
+                    <p class="anim-3 intro-text">Lên men lactic là một quá trình sinh học thú vị, giúp bảo quản rau củ lâu dài và tạo ra món ăn giàu men vi sinh tự nhiên, rất có lợi cho hệ tiêu hóa của con người.</p>
+                    <div class="team-members anim-3">
+                        <div class="member-badge"><i class="fas fa-user-graduate"></i> Lưu Phú Gia Bảo</div>
+                        <div class="member-badge"><i class="fas fa-user-graduate"></i> Trần Văn Huy</div>
+                        <div class="member-badge"><i class="fas fa-user-graduate"></i> Nguyễn Văn Tuấn</div>
+                        <div class="member-badge"><i class="fas fa-user-graduate"></i> Vũ Anh Khoa</div>
+                    </div>
+                    <div class="ingredient-tags anim-4">
+                        <div class="tag tag-green" style="border-color: var(--accent-green);"><i class="fas fa-leaf"></i> Bắp cải (Chính)</div>
+                        <div class="tag tag-orange"><i class="fas fa-carrot"></i> Cà rốt (Bổ sung)</div>
+                        <div class="tag tag-blue"><i class="fas fa-cubes"></i> Muối hạt</div>
+                        <div class="tag tag-yellow"><i class="fas fa-cube"></i> Đường trắng</div>
+                        <div class="tag tag-blue"><i class="fas fa-droplet"></i> Nước sạch</div>
+                    </div>
+                </div>
+                <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298414552-2543f253-fc3d-4af2-9106-3058ecb6916a.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-list-ol"></i></span> Quy Trình Thực Hiện</h2>
+                    <div class="steps-grid">
+                        <div class="step-item anim-2"><div class="step-number">1</div><div class="step-text">Rửa sạch bắp cải và một ít cà rốt, phơi héo để giảm lượng nước giúp dưa giòn.</div></div>
+                        <div class="step-item anim-2"><div class="step-number">2</div><div class="step-text">Cắt bắp cải thành khúc (0,5–0,8cm), cà rốt bào sợi để bổ sung màu sắc.</div></div>
+                        <div class="step-item anim-3"><div class="step-number">3</div><div class="step-text">Trộn đều rau củ, cho vào <b>bình nhựa</b> đã tiệt trùng và nén thật chặt xuống.</div></div>
+                        <div class="step-item anim-3"><div class="step-number">4</div><div class="step-text">Đổ ngập nước muối 3% (kèm 1% đường) cao hơn mặt rau 5cm để tạo độ yếm khí.</div></div>
+                        <div class="step-item anim-4"><div class="step-number">5</div><div class="step-text">Đậy kín nắp bình, ủ ở nhiệt độ ấm 35–40°C trong <b>2 ngày</b> để lên men.</div></div>
+                    </div>
+                </div>
+                <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 3 (Video 1) -->
+            <div class="slide glass-panel" data-type="video">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298449511-233b2a2f-769a-420f-8823-510e2740ddfe.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h2 class="anim-1"><span class="icon-grad"><i class="fas fa-video"></i></span> Video Thực Hành</h2>
+                    <div class="video-container anim-2">
+                        <video id="vid1" controls muted playsinline><source src="https://files.catbox.moe/i6nhjk.mp4" type="video/mp4"></video>
+                        <audio id="aud1" class="bg-music"><source src="https://files.catbox.moe/jhi1g7.mp3" type="audio/mpeg"></audio>
+                    </div>
+                </div>
+                <div class="footer-credit anim-3">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298467888-8b99876f-f71e-47b4-acdd-7ec42e0b5034.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <i class="fas fa-award end-icon anim-1"></i>
+                    <h1 class="anim-2" style="font-size: 3.5rem;">THÀNH QUẢ SAU 2 NGÀY</h1>
+                    <p class="anim-3" style="font-size: 1.25rem; color: var(--text-secondary); line-height: 1.8; max-width: 800px; text-align: center; margin-top: 15px; font-weight: 600;">
+                        Sản phẩm đã chuyển sang màu vàng đặc trưng của dưa chín, cấu trúc rau vẫn giữ được độ giòn, nước ngâm có hiện tượng đục nhẹ do sự phát triển của vi sinh vật.
+                    </p>
+                </div>
+                <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 5 (Video 2) -->
+            <div class="slide glass-panel" data-type="video">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298492260-381fb9c8-115a-4d06-bff8-1c67aa17a83a.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(245,158,11,0.1); color: var(--accent-yellow);"><i class="fas fa-microscope"></i></span> Đánh Giá Cảm Quan</h2>
+                    <div class="video-container anim-2">
+                        <video id="vid2" controls playsinline><source src="https://files.catbox.moe/91hic7.mp4" type="video/mp4"></video>
+                    </div>
+                </div>
+                <div class="footer-credit anim-3">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298530172-6e45ec93-5749-4d0d-90ee-7ffbc1b2931e.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-table-list"></i></span> Bảng So Sánh Kết Quả</h2>
+                    <div class="anim-2" style="width: 100%; display: flex; justify-content: center;">
+                        <table>
+                            <thead><tr><th>Thời điểm</th><th>Màu sắc</th><th>Mùi, vị</th><th>Trạng thái</th><th>Độ pH (ước tính)</th></tr></thead>
+                            <tbody>
+                                <tr><td><b>Ban đầu (Mới trộn)</b></td><td>Xanh lá, trắng sáng</td><td>Hăng của rau sống, mặn</td><td>Cứng, giòn</td><td style="color: var(--accent-cyan); font-weight: 800;">~ 6.0 – 7.0</td></tr>
+                                <tr><td><b>Sau 2 ngày ủ</b></td><td>Chuyển vàng đặc trưng</td><td>Vị chua dịu</td><td>Mềm hơn, giữ độ giòn</td><td style="color: var(--accent-green); font-weight: 800;">~ 3.0 – 4.0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="footer-credit anim-3">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 7 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298554313-ca323719-0b36-4b38-b591-9ad9afcc076c.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(239,68,68,0.1); color: #ef4444;"><i class="fas fa-comments"></i></span> Trả Lời Thảo Luận</h2>
+                    <div class="qa-grid">
+                        <div class="qa-item anim-2">
+                            <div class="qa-question">Vi khuẩn lên men dưa chua có từ những nguồn nào? Cách chủ động bổ sung?</div>
+                            <div class="qa-answer"><b>- Nguồn gốc:</b> Có sẵn tự nhiên trên lá rau, không khí và dụng cụ.<br><b>- Cách bổ sung:</b> Dùng "nước mồi" hoặc thêm đường/hành củ để kích thích vi khuẩn Lactic sinh sôi.</div>
+                        </div>
+                        <div class="qa-item anim-3">
+                            <div class="qa-question">Giải thích cơ chế gây ra sự "chín" của dưa.</div>
+                            <div class="qa-answer">Vi khuẩn Lactic phân giải đường thành <b>axit lactic</b>. Nồng độ axit tăng làm giảm pH, ức chế nấm mốc gây thối, biến đổi diệp lục thành pheophytin giúp dưa có <b>màu vàng</b> và vị chua giòn.</div>
+                        </div>
+                        <div class="qa-item anim-4">
+                            <div class="qa-question">Nêu các yếu tố chính ảnh hưởng đến chất lượng sản phẩm dưa chua?</div>
+                            <div class="qa-answer"><b>- Nhiệt độ:</b> Ủ nơi ấm (35-40°C).<br><b>- Lượng muối:</b> Chuẩn 3-5% (nhạt dễ hỏng, mặn khó chua).<br><b>- Yếm khí:</b> Phải nén chặt và đổ ngập nước để ngăn oxy, tránh mốc.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
+            </div>
+
+            <!-- Slide 8 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298575698-7739e396-27a3-4511-ad1d-c824f1a547c4.mp3"></audio>
+                
+                <div class="slide-content-wrapper">
+                    <i class="fas fa-check-circle end-icon anim-1"></i>
+                    <h1 class="anim-2" style="font-size: 3rem;">Hoàn Thành Bài Thí Nghiệm!</h1>
+                    <p class="anim-3" style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 15px; font-weight: 600;">Cảm ơn thầy cô và các bạn đã chú ý lắng nghe! 🎉</p>
+                </div>
+                <div class="footer-credit anim-4">Cre by Gia Bảo K24</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls" id="controlBar">
+        <button class="btn" onclick="forcePrevSlide()"><i class="fas fa-chevron-left"></i> Quay Lại</button>
+        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <button class="btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-pause"></i> Tạm Dừng</button>
+        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <div class="timer-bar"><div id="timerFill" class="timer-fill"></div></div>
+        <div id="timeText" class="time-text">--</div>
+        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <button class="btn btn-primary" onclick="forceNextSlide()">Tiếp Theo <i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <div class="slide-counter"><i class="fas fa-layer-group" style="color: var(--accent-cyan); margin-right: 5px;"></i> <span id="slideCounter">1</span> / 8</div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        let isPaused = false;
+        let timerInterval;
+        let timeLeft = 0;
+        const WAIT_TIME = 3000; 
+
+        function startPresentation() {
+            document.getElementById('startScreen').style.opacity = '0';
+            setTimeout(() => document.getElementById('startScreen').style.display = 'none', 300);
+            buildOverviewGrid();
+            
+            // Kích hoạt audio context
+            const dummyAudio = new Audio();
+            dummyAudio.play().catch(e=>{});
+
+            setTimeout(() => { initSlide(); }, 300); 
+        }
+
+        function stopAllMediaAndSpeech() {
+            document.querySelectorAll('video').forEach(vid => { 
+                vid.pause(); vid.currentTime = 0; vid.classList.remove('video-blurred'); 
+            });
+            document.querySelectorAll('audio').forEach(aud => { 
+                aud.pause(); aud.currentTime = 0; 
+            });
+
+            clearInterval(timerInterval);
+            document.getElementById('timerFill').style.transform = `scaleX(0)`;
+            document.getElementById('timeText').innerText = "--";
+        }
+
+        function initSlide() {
+            stopAllMediaAndSpeech();
+
+            slides.forEach(s => s.classList.remove('active'));
+            isPaused = false;
+            
+            document.getElementById('controlBar').style.display = 'flex';
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> Tạm Dừng';
+            document.getElementById('slideCounter').textContent = currentSlide + 1;
+            document.getElementById('slideNumber').textContent = (currentSlide + 1) + ' / ' + slides.length;
+            updateDashboard();
+
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+
+            setTimeout(() => {
+                const slide = slides[currentSlide];
+                slide.classList.add('active');
+
+                if (slide.getAttribute('data-type') === 'video') {
+                    handleVideoSlide(slide);
+                } else {
+                    handleAudioSlide(slide); 
+                }
+            }, 50);
+        }
+
+        function handleAudioSlide(slide) {
+            const voice = slide.querySelector('.voiceover');
+            
+            if (voice) {
+                updateStatus("Đang thuyết trình...", "Đọc...");
+                voice.currentTime = 0;
+                
+                voice.onerror = () => { startWaitTimer(); };
+                voice.onended = () => { startWaitTimer(); };
+
+                if (!isPaused) {
+                    let playPromise = voice.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(e => { updateStatus("Lỗi Audio / Bấm Play", "Lỗi"); });
+                    }
+                }
+            } else {
+                startWaitTimer();
+            }
+        }
+
+        function handleVideoSlide(slide) {
+            const vid = slide.querySelector('video');
+            const bgMusic = slide.querySelector('.bg-music'); 
+            const voice = slide.querySelector('.voiceover');
+            
+            vid.classList.add('video-blurred'); 
+
+            if (voice) {
+                updateStatus("Đang đọc giới thiệu...", "Đọc...");
+                voice.currentTime = 0;
+                
+                voice.onerror = () => { voice.onended(); };
+                voice.onended = () => {
+                    vid.classList.remove('video-blurred'); 
+                    updateStatus("Đang phát Video...", "Video");
+                    if (!isPaused && slide.classList.contains('active')) {
+                        vid.play().catch(e=>{});
+                        if (bgMusic) bgMusic.play().catch(e=>{});
+                    }
+                };
+
+                if (!isPaused) {
+                    let playPromise = voice.play();
+                    if (playPromise !== undefined) playPromise.catch(e => { updateStatus("Bấm Play thủ công", "Lỗi"); });
+                }
+            } else {
+                vid.classList.remove('video-blurred');
+                updateStatus("Đang phát Video...", "Video");
+                if(!isPaused) { vid.play().catch(e=>{}); if(bgMusic) bgMusic.play().catch(e=>{}); }
+            }
+
+            vid.onended = () => { startWaitTimer(); };
+        }
+
+        function startWaitTimer() {
+            timeLeft = WAIT_TIME;
+            updateStatus("Sắp chuyển trang...", "Đợi...");
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timeLeft -= 100;
+                    let sec = Math.ceil(timeLeft / 1000);
+                    document.getElementById('timeText').innerText = sec + 's';
+                    let pct = Math.max(0, timeLeft / WAIT_TIME);
+                    document.getElementById('timerFill').style.transform = `scaleX(${pct})`;
+
+                    if (timeLeft <= 0) { clearInterval(timerInterval); autoNextSlide(); }
+                }
+            }, 100);
+        }
+
+        function updateStatus(longText, shortText) {
+            document.getElementById('slideStatus').innerText = longText;
+            document.getElementById('timeText').innerText = shortText;
+        }
+
+        function updateDashboard() {
+            const percent = Math.round(((currentSlide + 1) / slides.length) * 100);
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressFill').style.strokeDasharray = (percent / 100 * 376) + ' 376';
+        }
+
+        function autoNextSlide() {
+            if (currentSlide < slides.length - 1) { currentSlide++; initSlide(); } 
+            else { updateStatus("Đã Hoàn Thành!", "Hết"); document.getElementById('controlBar').style.display = 'none'; }
+        }
+
+        function forceNextSlide() {
+            if (currentSlide >= slides.length - 1) return;
+            currentSlide++; initSlide();
+        }
+
+        function forcePrevSlide() {
+            if (currentSlide > 0) { currentSlide--; initSlide(); }
+        }
+
+        function togglePlayPause() {
+            isPaused = !isPaused;
+            document.getElementById('playPauseBtn').innerHTML = isPaused ? '<i class="fas fa-play"></i> Tiếp Tục' : '<i class="fas fa-pause"></i> Tạm Dừng';
+            
+            const cur = slides[currentSlide];
+            const voice = cur.querySelector('.voiceover');
+            const vid = cur.querySelector('video');
+            const bgMusic = cur.querySelector('.bg-music');
+
+            if(isPaused) {
+                if(voice) voice.pause();
+                if(vid) vid.pause();
+                if(bgMusic) bgMusic.pause();
+            } else {
+                if (cur.getAttribute('data-type') !== 'video') {
+                    if (voice && !voice.ended && voice.currentTime > 0) voice.play();
+                } else {
+                    if (voice && !voice.ended && voice.currentTime > 0) {
+                        voice.play(); 
+                    } else if (vid && !vid.ended && !vid.classList.contains('video-blurred')) {
+                        vid.play(); 
+                        if(bgMusic) bgMusic.play();
+                    }
+                }
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') forceNextSlide();
+            else if (e.key === 'ArrowLeft') forcePrevSlide();
+            else if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); togglePlayPause(); }
+        });
+
+        function openModal(id) { 
+            document.getElementById(id).classList.add('active'); 
+            stopAllMediaAndSpeech(); 
+        }
+        
+        function closeModal(id) { 
+            document.getElementById(id).classList.remove('active');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+            initSlide();
+        }
+        
+        function activateTab(el) { document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+
+        const slideTitles = ['Giới Thiệu', 'Các Bước Tiến Hành', 'Video Thực Hành', 'Thành Quả', 'Đánh Giá Cảm Quan', 'Bảng So Sánh', 'Thảo Luận', 'Kết Thúc'];
+        function buildOverviewGrid() {
+            const grid = document.getElementById('overviewGrid');
+            grid.innerHTML = '';
+            slideTitles.forEach((title, index) => {
+                grid.innerHTML += `
+                    <div class="overview-item" onclick="jumpToSlide(${index})">
+                        <div class="overview-number">${index + 1}</div>
+                        <div class="overview-title-text">${title}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function jumpToSlide(index) {
+            currentSlide = index; 
+            document.getElementById('overviewModal').classList.remove('active');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+            initSlide(); 
+        }
+
+        function saveSettings() {
+            const v1 = document.getElementById('inputVid1').value;
+            const a1 = document.getElementById('inputAud1').value;
+            const v2 = document.getElementById('inputVid2').value;
+
+            if(v1) { document.getElementById('vid1').src = v1; document.getElementById('vid1').load(); }
+            if(a1) { document.getElementById('aud1').src = a1; document.getElementById('aud1').load(); }
+            if(v2) { document.getElementById('vid2').src = v2; document.getElementById('vid2').load(); }
+
+            document.getElementById('settingsModal').classList.remove('active');
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+            alert('Cập nhật Video/Audio thành công!');
+            initSlide();
+        }
+    </script>
+</body>
+</html>
