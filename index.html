@@ -10,198 +10,639 @@
 
     <style>
         :root {
-            /* MÀU SẮC WHITE GLASSMORPHISM CAO CẤP */
-            --glass-bg: rgba(255, 255, 255, 0.65); 
-            --glass-border: rgba(255, 255, 255, 0.9); 
-            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); 
-            --glass-blur: blur(25px); 
-            
-            --accent-green: #10b981; 
-            --accent-cyan: #0ea5e9;  
+            --glass-bg: rgba(255, 255, 255, 0.60);
+            --glass-border: rgba(255, 255, 255, 0.92);
+            --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+            --glass-blur: blur(28px);
+
+            --accent-green: #10b981;
+            --accent-green-light: #34d399;
+            --accent-green-dark: #059669;
+            --accent-cyan: #0ea5e9;
+            --accent-cyan-light: #38bdf8;
             --accent-yellow: #f59e0b;
-            
-            --text-primary: #0f172a; 
+            --accent-red: #ef4444;
+
+            --text-primary: #0f172a;
             --text-secondary: #334155;
             --text-muted: #64748b;
+
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 30px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; }
-        
-        body { 
-            font-family: 'Be Vietnam Pro', sans-serif; 
-            color: var(--text-primary); 
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: var(--text-primary);
             display: flex; flex-direction: column; position: relative;
-            background: linear-gradient(-45deg, #e0f2fe, #f0fdf4, #f8fafc, #dcfce3);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: linear-gradient(-45deg, #d1fae5, #e0f2fe, #f8fafc, #ecfdf5, #bfdbfe, #f0fdf4);
+            background-size: 600% 600%;
+            animation: gradientBG 20s ease infinite;
         }
 
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* Subtle dot-grid texture */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 1;
+            background-image: radial-gradient(rgba(16,185,129,0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
 
-        .circle-decor { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; opacity: 0.6; }
-        .circle-1 { width: 450px; height: 450px; background: #6ee7b7; top: -50px; left: -50px; animation: float 10s infinite alternate; }
-        .circle-2 { width: 500px; height: 500px; background: #bae6fd; bottom: -100px; right: 5%; animation: float 15s infinite alternate-reverse; }
-        .circle-3 { width: 400px; height: 400px; background: #fbcfe8; top: 30%; left: 40%; animation: float 12s infinite alternate; }
-        @keyframes float { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(50px) scale(1.1); } }
+        @keyframes gradientBG {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        /* Màn hình Bắt đầu */
+        /* ---- Blobs ---- */
+        .circle-decor {
+            position: absolute; border-radius: 50%; filter: blur(90px);
+            z-index: 0; pointer-events: none; mix-blend-mode: multiply;
+        }
+        .circle-1 { width: 520px; height: 520px; background: radial-gradient(circle, #6ee7b7, #34d399); top: -100px; left: -100px; opacity: 0.45; animation: blob1 13s ease-in-out infinite alternate; }
+        .circle-2 { width: 560px; height: 560px; background: radial-gradient(circle, #93c5fd, #7dd3fc); bottom: -130px; right: 2%; opacity: 0.40; animation: blob2 17s ease-in-out infinite alternate-reverse; }
+        .circle-3 { width: 430px; height: 430px; background: radial-gradient(circle, #f9a8d4, #fda4af); top: 25%; left: 36%; opacity: 0.35; animation: blob3 15s ease-in-out infinite alternate; }
+        .circle-4 { width: 320px; height: 320px; background: radial-gradient(circle, #fde68a, #fcd34d); top: 5%; right: 18%; opacity: 0.28; animation: blob1 11s ease-in-out infinite alternate-reverse; }
+
+        @keyframes blob1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(50px, 60px) scale(1.08); } }
+        @keyframes blob2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-40px,-50px) scale(1.06); } }
+        @keyframes blob3 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(30px, 45px) scale(1.1); } }
+
+        /* ======================= START SCREEN ======================= */
         #startScreen {
-            position: fixed; inset: 0; 
-            background: linear-gradient(135deg, rgba(224, 242, 254, 0.8), rgba(220, 252, 227, 0.8)); 
-            backdrop-filter: blur(20px); z-index: 10000; display: flex; justify-content: center; align-items: center;
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, rgba(209,250,229,0.85), rgba(224,242,254,0.85), rgba(240,253,244,0.9));
+            backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.6s ease;
         }
+
+        .particle {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            animation: particleRise linear infinite;
+        }
+        @keyframes particleRise {
+            0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+            8%   { opacity: 1; }
+            92%  { opacity: 0.8; }
+            100% { transform: translateY(-15vh) rotate(540deg); opacity: 0; }
+        }
+
         .start-card {
-            background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 32px;
-            padding: 60px 40px; box-shadow: 0 25px 50px rgba(16, 185, 129, 0.1); text-align: center;
-            max-width: 900px; width: 90%; display: flex; flex-direction: column; align-items: center;
-            animation: fadeUp 0.8s ease-out forwards;
+            background: rgba(255,255,255,0.78);
+            border: 1px solid rgba(255,255,255,0.95);
+            border-radius: 36px;
+            padding: 52px 44px;
+            box-shadow: 0 32px 90px rgba(16,185,129,0.12), 0 12px 35px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.85);
+            text-align: center;
+            max-width: 860px; width: 90%;
+            display: flex; flex-direction: column; align-items: center;
+            animation: cardIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            position: relative; overflow: hidden;
         }
-        .start-card img { width: 150px; height: 150px; border-radius: 50%; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin-bottom: 25px; border: 5px solid white; object-fit: cover;}
-        .start-card h1 { font-size: 4rem; color: var(--accent-green); margin-bottom: 15px; text-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); line-height: 1.2; }
-        .start-card p { font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.6; font-weight: 500; max-width: 700px; }
+        /* Inner shimmer sweep */
+        .start-card::before {
+            content: ''; position: absolute; top: 0; left: -70%;
+            width: 55%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+            animation: shimmerSweep 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes shimmerSweep { 0% { left: -70%; } 100% { left: 120%; } }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(45px) scale(0.9); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .logo-ring {
+            position: relative; width: 150px; height: 150px; margin-bottom: 28px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-ring img {
+            width: 132px; height: 132px; border-radius: 50%;
+            box-shadow: 0 15px 45px rgba(16,185,129,0.22), 0 0 0 4px white, 0 0 0 7px rgba(16,185,129,0.12);
+            object-fit: cover; position: relative; z-index: 1;
+        }
+        .ring-spinner {
+            position: absolute; inset: 0; border-radius: 50%;
+            background: conic-gradient(var(--accent-green), var(--accent-cyan), var(--accent-green-light), transparent 60%);
+            animation: spinRing 5s linear infinite;
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), white calc(100% - 3px));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), white calc(100% - 3px));
+        }
+        @keyframes spinRing { to { transform: rotate(360deg); } }
+
+        .start-card h1 {
+            font-size: 3.5rem; font-weight: 900; margin-bottom: 13px; letter-spacing: -1px; line-height: 1.15;
+            background: linear-gradient(135deg, #064e3b 0%, var(--accent-green) 45%, #0369a1 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .start-card p {
+            font-size: 1.18rem; color: var(--text-secondary); margin-bottom: 36px;
+            line-height: 1.75; font-weight: 500; max-width: 660px;
+        }
 
         .pulse-btn {
-            padding: 18px 50px; font-size: 1.4rem; font-weight: 800; color: white; 
-            background: linear-gradient(135deg, var(--accent-green), #34d399);
-            border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-            transition: all 0.3s; font-family: 'Be Vietnam Pro', sans-serif; animation: pulse-glow 2s infinite;
+            padding: 16px 52px; font-size: 1.3rem; font-weight: 900; color: white;
+            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
+            background-size: 200% 200%;
+            border: none; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Be Vietnam Pro', sans-serif;
+            animation: btnPulse 2.5s ease-in-out infinite;
+            position: relative; overflow: hidden;
         }
-        .pulse-btn:hover { transform: scale(1.05); }
+        .pulse-btn::after {
+            content: ''; position: absolute; inset: 0; border-radius: 50px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.22), transparent 50%);
+            pointer-events: none;
+        }
+        .pulse-btn:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 22px 55px rgba(16,185,129,0.6), 0 8px 20px rgba(0,0,0,0.1); }
+        .pulse-btn:active { transform: scale(0.97); }
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 0 0 0 rgba(16,185,129,0.45); }
+            55%       { box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 0 0 18px rgba(16,185,129,0); }
+        }
 
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); } 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        /* ======================= GLASS BASE ======================= */
+        .glass-box {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.72);
+        }
 
-        .glass-box { background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: var(--glass-shadow); }
+        /* ======================= NAVBAR ======================= */
+        .navbar {
+            position: relative; z-index: 100; height: 66px;
+            display: flex; align-items: center; padding: 0 22px; gap: 10px;
+            border-radius: 0 0 18px 18px; border-top: none;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,0.7);
+        }
+        .logo {
+            font-size: 1.3rem; font-weight: 900; color: var(--accent-green);
+            display: flex; align-items: center; gap: 10px; min-width: 165px;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .logo img {
+            width: 35px; height: 35px; border-radius: 10px;
+            border: 2px solid rgba(16,185,129,0.35);
+            box-shadow: 0 4px 12px rgba(16,185,129,0.15);
+        }
+        .nav-separator { width: 1px; height: 26px; background: rgba(0,0,0,0.07); }
+        .nav-tabs {
+            display: flex; gap: 3px; padding: 5px;
+            background: rgba(0,0,0,0.04); border-radius: 14px;
+        }
+        .nav-tab {
+            padding: 7px 19px; border-radius: 10px; background: transparent; border: none;
+            color: var(--text-muted); font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700; font-size: 0.88rem; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; align-items: center; gap: 7px; white-space: nowrap;
+        }
+        .nav-tab:hover { background: rgba(255,255,255,0.65); color: var(--text-primary); }
+        .nav-tab.active {
+            background: white; color: var(--accent-green); font-weight: 800;
+            box-shadow: 0 2px 14px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.9);
+        }
+        .nav-tab i { font-size: 0.82rem; }
+        .nav-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+        .nav-icon-btn {
+            width: 37px; height: 37px; border-radius: 10px;
+            background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9);
+            color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s ease; font-size: 0.88rem;
+        }
+        .nav-icon-btn:hover {
+            background: white; color: var(--accent-green);
+            box-shadow: 0 4px 14px rgba(16,185,129,0.15);
+            transform: translateY(-1px);
+        }
 
-        .navbar { position: relative; z-index: 100; height: 70px; display: flex; align-items: center; padding: 0 30px; gap: 40px; border-radius: 0 0 24px 24px; border-top: none; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent-green); display: flex; align-items: center; gap: 10px; min-width: 200px; text-transform: uppercase; letter-spacing: 1px;}
-        .logo img { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--accent-green);}
-        .nav-tabs { display: flex; gap: 10px; flex: 1; }
-        .nav-tab { padding: 8px 18px; border-radius: 12px; background: rgba(255,255,255,0.5); border: 1px solid transparent; color: var(--text-secondary); font-family: 'Be Vietnam Pro', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
-        .nav-tab:hover { background: white; color: var(--text-primary); border-color: white; }
-        .nav-tab.active { background: white; color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .nav-right { margin-left: auto; }
-        .nav-icon-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.6); border: 1px solid white; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;}
-        .nav-icon-btn:hover { background: white; color: var(--accent-green); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        /* ======================= LAYOUT ======================= */
+        .main-container {
+            display: flex; flex: 1; gap: 14px; padding: 14px 18px 14px;
+            overflow: hidden; position: relative; z-index: 10;
+        }
 
-        .main-container { display: flex; flex: 1; gap: 20px; padding: 20px; overflow: hidden; position: relative; z-index: 10; }
-        .sidebar { width: 280px; padding: 25px; display: flex; flex-direction: column; gap: 25px; overflow: hidden; }
-        .dashboard-section { display: flex; flex-direction: column; gap: 12px; }
-        .dashboard-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-cyan); }
-        
-        .progress-ring { width: 120px; height: 120px; margin: 0 auto 5px; }
-        .progress-circle { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 8; }
-        .progress-circle-fill { fill: none; stroke: var(--accent-green); stroke-width: 8; stroke-linecap: round; transform-origin: center; transform: rotate(-90deg); transition: stroke-dasharray 0.5s ease-out; }
-        .progress-text { text-align: center; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;}
-        .progress-percent { font-size: 1.6rem; font-weight: 900; color: var(--accent-green); }
-        
-        .slide-info-item { background: rgba(255,255,255,0.7); padding: 12px 16px; border-radius: 14px; border: 1px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .slide-info-label { color: var(--text-muted); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; }
-        .slide-info-value { color: var(--text-primary); font-weight: 800; font-size: 0.95rem; }
+        /* ======================= SIDEBAR ======================= */
+        .sidebar {
+            width: 255px; padding: 18px 16px;
+            display: flex; flex-direction: column; gap: 15px; overflow: hidden;
+        }
+        .dashboard-section { display: flex; flex-direction: column; gap: 9px; }
+        .dashboard-title {
+            font-size: 0.7rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 1.8px; color: var(--accent-cyan);
+            display: flex; align-items: center; gap: 7px;
+        }
+        .dashboard-title::before {
+            content: ''; width: 14px; height: 2.5px; border-radius: 2px;
+            background: var(--accent-cyan); flex-shrink: 0;
+        }
 
-        .center-wrapper { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 24px; }
-        .glass-panel { width: 100%; height: 100%; padding: 30px 50px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0; visibility: hidden; transform: scale(0.97) translateY(20px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; overflow: hidden; }
+        /* Progress Ring */
+        .progress-ring {
+            width: 108px; height: 108px; margin: 0 auto 3px;
+            filter: drop-shadow(0 4px 14px rgba(16,185,129,0.22));
+        }
+        .progress-circle { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 9; }
+        .progress-circle-fill {
+            fill: none; stroke: url(#progressGrad); stroke-width: 9; stroke-linecap: round;
+            transform-origin: center; transform: rotate(-90deg);
+            transition: stroke-dasharray 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .progress-text { text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+        .progress-percent { font-size: 1.65rem; font-weight: 900; color: var(--accent-green); display: block; line-height: 1.1; }
+
+        /* Info Items */
+        .slide-info-item {
+            background: rgba(255,255,255,0.72); padding: 10px 13px; border-radius: 13px;
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.25s ease;
+        }
+        .slide-info-item:hover { background: white; transform: translateX(3px); }
+        .slide-info-label {
+            color: var(--text-muted); font-weight: 800; font-size: 0.68rem;
+            text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;
+        }
+        .slide-info-value { color: var(--text-primary); font-weight: 800; font-size: 0.88rem; }
+
+        #slideTitleInfo {
+            color: var(--accent-green); font-size: 0.82rem; font-weight: 700;
+            line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* ======================= CENTER ======================= */
+        .center-wrapper {
+            flex: 1; position: relative; display: flex;
+            justify-content: center; align-items: center;
+            overflow: hidden; border-radius: var(--radius-lg);
+        }
+        .glass-panel {
+            width: 100%; height: 100%; padding: 26px 44px;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0; visibility: hidden;
+            transform: scale(0.96) translateY(26px);
+            transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.5s;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
         .glass-panel.active { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
-        .slide-content-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; }
+        .slide-content-wrapper {
+            flex: 1; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; width: 100%; height: 100%;
+        }
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .active .anim-1 { animation: fadeUp 0.6s 0.1s forwards; opacity: 0; }
-        .active .anim-2 { animation: fadeUp 0.6s 0.2s forwards; opacity: 0; }
-        .active .anim-3 { animation: fadeUp 0.6s 0.3s forwards; opacity: 0; }
-        .active .anim-4 { animation: fadeUp 0.6s 0.4s forwards; opacity: 0; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)   scale(1); }
+        }
+        .active .anim-1 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.07s forwards; opacity: 0; }
+        .active .anim-2 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.17s forwards; opacity: 0; }
+        .active .anim-3 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.27s forwards; opacity: 0; }
+        .active .anim-4 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.37s forwards; opacity: 0; }
 
-        h1 { font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--text-primary); }
-        h2 { font-size: 1.8rem; font-weight: 800; text-align: center; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .icon-grad { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); color: var(--accent-green); font-size: 1.3rem; }
+        /* ======================= TYPOGRAPHY ======================= */
+        h1 {
+            font-size: 2.75rem; font-weight: 900; text-align: center;
+            margin-bottom: 13px; letter-spacing: -0.6px; line-height: 1.2;
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 1.72rem; font-weight: 800; text-align: center; margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            letter-spacing: -0.3px;
+        }
+        .icon-grad {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 48px; height: 48px; border-radius: 14px;
+            background: rgba(16,185,129,0.12); color: var(--accent-green); font-size: 1.2rem;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
 
-        .intro-text { text-align: center; max-width: 850px; margin: 0 auto 15px; font-weight: 500; font-size: 1.05rem; line-height: 1.6; color: var(--text-secondary); }
-        .team-members { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 20px; }
-        .member-badge { background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); color: white; padding: 8px 18px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(16,185,129,0.3); display: flex; align-items: center; gap: 8px; transition: 0.3s; cursor: default;}
-        .member-badge:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(16,185,129,0.4); }
+        .intro-text {
+            text-align: center; max-width: 820px; margin: 0 auto 16px;
+            font-weight: 500; font-size: 1.04rem; line-height: 1.72;
+            color: var(--text-secondary);
+        }
 
-        .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 1000px; }
-        .steps-grid .step-item:last-child { grid-column: 1 / -1; width: 60%; margin: 0 auto; }
-        .step-item { display: flex; gap: 15px; align-items: flex-start; padding: 18px 22px; background: rgba(255,255,255,0.7); border: 1px solid white; border-radius: 16px; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .step-item:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(16,185,129,0.1); }
-        .step-number { width: 40px; height: 40px; border-radius: 12px; background: var(--accent-green); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; color: white; flex-shrink: 0; }
-        .step-text { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.5; padding-top: 5px; font-weight: 600; }
+        /* Team badges */
+        .team-members { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-bottom: 16px; }
+        .member-badge {
+            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
+            color: white; padding: 8px 20px; border-radius: 50px;
+            font-weight: 700; font-size: 0.88rem;
+            box-shadow: 0 5px 18px rgba(16,185,129,0.32), 0 2px 6px rgba(0,0,0,0.06);
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default; position: relative; overflow: hidden;
+        }
+        .member-badge::before {
+            content: ''; position: absolute; inset: 0; border-radius: 50px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 55%);
+            pointer-events: none;
+        }
+        .member-badge:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 30px rgba(16,185,129,0.45); }
 
-        /* Video & Audio elements */
-        .video-container { width: 100%; max-width: 850px; height: 48vh; background: #000; border-radius: 16px; border: 4px solid white; box-shadow: 0 15px 30px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
-        video { width: 100%; height: 100%; object-fit: contain; outline: none; transition: filter 1s ease, opacity 1s ease; }
-        .video-blurred { filter: blur(20px) grayscale(30%); opacity: 0.6; pointer-events: none; }
+        /* Steps */
+        .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; width: 100%; max-width: 940px; }
+        .steps-grid .step-item:last-child { grid-column: 1 / -1; width: 55%; margin: 0 auto; }
+        .step-item {
+            display: flex; gap: 13px; align-items: flex-start; padding: 15px 18px;
+            background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9);
+            border-left: 3px solid transparent;
+            border-radius: 15px; transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .step-item:hover {
+            background: white; border-left-color: var(--accent-green);
+            transform: translateX(5px); box-shadow: 0 8px 28px rgba(16,185,129,0.1);
+        }
+        .step-number {
+            width: 37px; height: 37px; border-radius: 11px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green-light));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1rem; color: white;
+            box-shadow: 0 4px 12px rgba(16,185,129,0.32);
+        }
+        .step-text { color: var(--text-secondary); font-size: 0.98rem; line-height: 1.55; padding-top: 5px; font-weight: 600; }
+
+        /* Video */
+        .video-container {
+            width: 100%; max-width: 800px; height: 46vh; background: #070707;
+            border-radius: 16px; border: 3px solid rgba(255,255,255,0.88);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.16), 0 8px 22px rgba(0,0,0,0.08);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+        video { width: 100%; height: 100%; object-fit: contain; outline: none; transition: filter 1.3s ease, opacity 1.3s ease; }
+        .video-blurred { filter: blur(22px) brightness(0.65); opacity: 0.45; pointer-events: none; }
         audio { display: none; }
 
-        table { width: 100%; max-width: 950px; border-collapse: separate; border-spacing: 0; border-radius: 14px; overflow: hidden; border: 1px solid white; background: rgba(255,255,255,0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        th, td { padding: 16px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); border-right: 1px solid rgba(0,0,0,0.05); }
-        th:last-child, td:last-child { border-right: none; }
+        /* Table */
+        table {
+            width: 100%; max-width: 900px; border-collapse: separate; border-spacing: 0;
+            border-radius: 15px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.5);
+            box-shadow: 0 6px 26px rgba(0,0,0,0.04);
+        }
+        th, td { padding: 15px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        th:not(:last-child), td:not(:last-child) { border-right: 1px solid rgba(0,0,0,0.04); }
         tr:last-child td { border-bottom: none; }
-        th { background: rgba(255,255,255,0.9); color: var(--text-primary); font-weight: 800; font-size: 1rem; text-transform: uppercase; }
-        td { color: var(--text-secondary); font-size: 1rem; font-weight: 600; transition: 0.3s; }
-        tr:hover td { background: white; color: var(--text-primary); }
-        
-        .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 1150px; align-items: stretch; }
-        .qa-item { background: rgba(255,255,255,0.7); border: 1px solid white; border-top: 4px solid var(--accent-green); border-radius: 16px; padding: 20px; transition: 0.3s; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .qa-item:hover { background: white; transform: translateY(-5px); box-shadow: 0 10px 25px rgba(16,185,129,0.1); }
-        .qa-question { font-weight: 800; color: var(--text-primary); font-size: 0.95rem; line-height: 1.4; display: flex; flex-direction: column; gap: 8px; }
-        .qa-question::before { content: 'Câu hỏi'; display: inline-flex; width: max-content; background: var(--accent-green); color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-        .qa-answer { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; font-weight: 500;}
-        .qa-answer b { color: var(--text-primary); font-weight: 800;}
+        th {
+            background: rgba(255,255,255,0.92); color: var(--text-primary);
+            font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 0.5px; border-bottom: 2px solid rgba(16,185,129,0.1);
+        }
+        td { color: var(--text-secondary); font-size: 0.96rem; font-weight: 600; transition: 0.25s; }
+        tr:nth-child(even) td { background: rgba(240,253,244,0.5); }
+        tr:hover td { background: rgba(255,255,255,0.95) !important; color: var(--text-primary); }
 
-        .end-icon { font-size: 6rem; text-align: center; margin-bottom: 20px; display: block; color: var(--accent-green); text-shadow: 0 10px 20px rgba(16,185,129,0.3); }
-        .footer-credit { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.85rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+        /* QA */
+        .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; width: 100%; max-width: 1100px; align-items: stretch; }
+        .qa-item {
+            background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9);
+            border-top: 4px solid var(--accent-green); border-radius: 17px;
+            padding: 18px 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; gap: 9px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+        }
+        .qa-item:nth-child(2) { border-top-color: var(--accent-cyan); }
+        .qa-item:nth-child(2) .qa-question::before { background: var(--accent-cyan); }
+        .qa-item:nth-child(3) { border-top-color: var(--accent-yellow); }
+        .qa-item:nth-child(3) .qa-question::before { background: var(--accent-yellow); }
+        .qa-item:hover { background: white; transform: translateY(-6px); box-shadow: 0 18px 44px rgba(16,185,129,0.12); }
+        .qa-question {
+            font-weight: 800; color: var(--text-primary); font-size: 0.88rem;
+            line-height: 1.45; display: flex; flex-direction: column; gap: 8px;
+        }
+        .qa-question::before {
+            content: 'Câu hỏi'; display: inline-flex; width: max-content;
+            background: var(--accent-green); color: white;
+            padding: 3px 10px; border-radius: 7px;
+            font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .qa-answer { color: var(--text-secondary); font-size: 0.89rem; line-height: 1.68; font-weight: 500; }
+        .qa-answer b { color: var(--text-primary); font-weight: 800; }
 
-        .ingredient-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
-        .tag { background: rgba(255,255,255,0.8); padding: 8px 18px; border-radius: 50px; border: 1px solid white; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-        .tag:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(16,185,129,0.1);}
-        .tag-green i { color: #10b981; } .tag-orange i { color: #f59e0b; } .tag-blue i { color: #0ea5e9; } .tag-yellow i { color: #eab308; }
+        /* End icon */
+        .end-icon {
+            font-size: 5.5rem; text-align: center; margin-bottom: 18px; display: block;
+            color: var(--accent-green);
+            filter: drop-shadow(0 10px 26px rgba(16,185,129,0.38));
+            animation: iconHover 2.2s ease-in-out infinite;
+        }
+        @keyframes iconHover {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50%       { transform: translateY(-10px) rotate(3deg); }
+        }
 
-        .controls { position: fixed; bottom: 25px; right: 25px; display: flex; align-items: center; gap: 12px; z-index: 200; padding: 12px 25px; border-radius: 50px; background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); border: 1px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        .btn { background: transparent; border: none; color: var(--text-secondary); font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 15px; border-radius: 12px; transition: 0.3s; }
-        .btn:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); transform: translateY(-2px); }
-        .btn-primary { background: var(--accent-green); color: white !important; padding: 10px 25px; border-radius: 30px; }
-        .btn-primary:hover { background: #059669; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); }
-        .timer-bar { width: 120px; height: 8px; background: rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden; }
-        .timer-fill { height: 100%; width: 100%; background: var(--accent-green); transform-origin: left; transition: transform 0.1s linear; }
-        .time-text { font-size: 0.9rem; font-weight: 800; color: var(--accent-green); min-width: 45px; text-align: right; }
-        .slide-counter { position: fixed; bottom: 30px; left: 30px; font-size: 0.9rem; font-weight: 800; color: var(--text-secondary); z-index: 200; padding: 8px 18px; border-radius: 15px; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border: 1px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        .footer-credit {
+            position: absolute; bottom: 14px; width: 100%; text-align: center;
+            font-size: 0.75rem; color: var(--text-muted); font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55;
+        }
 
-        /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); z-index: 9000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; }
+        /* Ingredient tags */
+        .ingredient-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 8px; }
+        .tag {
+            background: rgba(255,255,255,0.8); padding: 7px 18px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.92); font-weight: 700; font-size: 0.88rem;
+            display: flex; align-items: center; gap: 7px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .tag:hover {
+            background: white; transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 8px 22px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3);
+        }
+        .tag-green i { color: #10b981; } .tag-orange i { color: #f59e0b; }
+        .tag-blue i  { color: #0ea5e9; } .tag-yellow i { color: #eab308; }
+
+        /* ======================= CONTROLS ======================= */
+        .controls {
+            position: fixed; bottom: 20px; right: 22px;
+            display: flex; align-items: center; gap: 7px; z-index: 200;
+            padding: 9px 18px; border-radius: 50px;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255,255,255,0.96);
+            box-shadow: 0 14px 45px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.85);
+        }
+        .btn {
+            background: transparent; border: none; color: var(--text-secondary);
+            font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; font-size: 0.86rem;
+            cursor: pointer; display: flex; align-items: center; gap: 7px;
+            padding: 7px 13px; border-radius: 11px; transition: all 0.25s ease; white-space: nowrap;
+        }
+        .btn:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); transform: translateY(-1px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green));
+            color: white !important; padding: 8px 22px; border-radius: 26px;
+            box-shadow: 0 5px 16px rgba(16,185,129,0.38);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-light));
+            box-shadow: 0 10px 28px rgba(16,185,129,0.5); transform: translateY(-2px) scale(1.03);
+        }
+        .ctrl-divider { width: 1px; height: 20px; background: rgba(0,0,0,0.08); }
+        .timer-bar { width: 96px; height: 6px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; }
+        .timer-fill {
+            height: 100%; width: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
+            transform-origin: left; transition: transform 0.1s linear;
+        }
+        .time-text { font-size: 0.84rem; font-weight: 900; color: var(--accent-green); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+
+        /* Slide counter */
+        .slide-counter {
+            position: fixed; bottom: 24px; left: 22px; font-size: 0.84rem; font-weight: 800;
+            color: var(--text-secondary); z-index: 200;
+            padding: 7px 16px; border-radius: 50px;
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.96);
+            box-shadow: 0 6px 22px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85);
+            display: flex; align-items: center; gap: 7px;
+        }
+
+        /* ======================= MODALS ======================= */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(236,253,245,0.45);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            z-index: 9000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: all 0.35s ease;
+        }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { width: 90%; max-width: 850px; max-height: 85vh; padding: 35px; overflow-y: auto; transform: scale(0.9); transition: 0.3s; background: rgba(255,255,255,0.95); border: 1px solid white; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-radius: 24px; }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
-        .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .modal-content {
+            width: 90%; max-width: 830px; max-height: 85vh; padding: 30px;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(22px);
+            transition: all 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.98);
+            box-shadow: 0 35px 90px rgba(0,0,0,0.13), 0 12px 35px rgba(0,0,0,0.06);
+            border-radius: 26px;
+        }
+        .modal-content::-webkit-scrollbar { width: 5px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 5px; }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 22px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 14px;
+        }
+        .modal-title { font-size: 1.38rem; font-weight: 900; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
         .modal-title i { color: var(--accent-cyan); }
-        .close-btn { background: rgba(0,0,0,0.05); border: none; width: 40px; height: 40px; border-radius: 10px; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;}
-        .close-btn:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .close-btn {
+            background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07);
+            width: 37px; height: 37px; border-radius: 10px; font-size: 1.05rem;
+            color: var(--text-muted); cursor: pointer; transition: all 0.25s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .close-btn:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.18); color: #ef4444; transform: scale(1.07); }
 
-        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .overview-item { background: rgba(255,255,255,0.5); border: 1px solid white; border-radius: 16px; padding: 25px 20px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .overview-item:hover { background: white; border-color: var(--accent-cyan); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(14,165,233,0.1); }
-        .overview-number { font-size: 2rem; font-weight: 900; color: var(--accent-cyan); }
-        .overview-title-text { font-weight: 700; color: var(--text-primary); font-size: 1rem; }
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 11px; }
+        .overview-item {
+            background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9);
+            border-radius: 15px; padding: 22px 15px; text-align: center;
+            cursor: pointer; transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+        }
+        .overview-item:hover {
+            background: white; border-color: var(--accent-cyan);
+            transform: translateY(-6px) scale(1.03); box-shadow: 0 18px 40px rgba(14,165,233,0.15);
+        }
+        .overview-number {
+            font-size: 2.1rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), #818cf8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .overview-title-text { font-weight: 700; color: var(--text-primary); font-size: 0.93rem; line-height: 1.4; }
 
-        .settings-group { margin-bottom: 20px; }
-        .settings-group label { display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 8px; }
-        .settings-group input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); background: white; color: var(--text-primary); font-family: 'Be Vietnam Pro', sans-serif; font-size: 1rem; outline: none; transition: 0.3s; }
-        .settings-group input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+        .settings-group { margin-bottom: 16px; }
+        .settings-group label {
+            display: block; font-weight: 700; font-size: 0.88rem;
+            color: var(--text-secondary); margin-bottom: 7px; letter-spacing: 0.1px;
+        }
+        .settings-group input {
+            width: 100%; padding: 12px 15px; border-radius: 11px;
+            border: 1.5px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.9);
+            color: var(--text-primary); font-family: 'Be Vietnam Pro', sans-serif;
+            font-size: 0.93rem; outline: none; transition: all 0.25s ease;
+        }
+        .settings-group input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 4px rgba(14,165,233,0.12); background: white; }
+
+        /* ======================= TOAST ======================= */
+        #toast-container {
+            position: fixed; top: 76px; right: 18px; z-index: 99999;
+            display: flex; flex-direction: column; gap: 9px; pointer-events: none;
+        }
+        .toast {
+            background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.98);
+            border-left: 4px solid var(--accent-green); border-radius: 14px;
+            padding: 13px 18px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.1), 0 4px 14px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 11px;
+            font-weight: 700; color: var(--text-primary); font-size: 0.88rem;
+            transform: translateX(130%); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto; min-width: 250px; backdrop-filter: blur(20px);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.hide { transform: translateX(140%); opacity: 0; transition: all 0.4s ease; }
+        .toast-icon { font-size: 1.05rem; flex-shrink: 0; }
+
+        /* ======================= CURSOR GLOW ======================= */
+        .cursor-glow {
+            position: fixed; width: 360px; height: 360px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,185,129,0.055) 0%, transparent 68%);
+            pointer-events: none; z-index: 2; transform: translate(-50%, -50%);
+            transition: left 0.12s ease, top 0.12s ease;
+            will-change: left, top;
+        }
+
+        /* Gradient text utility */
+        .text-gradient-green {
+            background: linear-gradient(135deg, #064e3b, var(--accent-green), #0369a1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Cursor glow -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
     <div class="circle-decor circle-1"></div>
     <div class="circle-decor circle-2"></div>
     <div class="circle-decor circle-3"></div>
+    <div class="circle-decor circle-4"></div>
 
     <div id="startScreen">
         <div class="start-card">
-            <img src="https://files.catbox.moe/61dbof.jpg" alt="Logo">
+            <div class="logo-ring">
+                <div class="ring-spinner"></div>
+                <img src="https://files.catbox.moe/61dbof.jpg" alt="Logo">
+            </div>
             <h1>Thí Nghiệm Lên Men Dưa Chua</h1>
             <p>Báo cáo thực hành môn Sinh Học<br><b>Nhấn Bắt Đầu</b> để hệ thống tự động chạy trình chiếu kết hợp giọng đọc thuyết minh và video mô phỏng.</p>
-            <button id="startBtn" class="pulse-btn" onclick="startPresentation()">Bắt Đầu Trình Chiếu <i class="fas fa-play" style="margin-left: 8px;"></i></button>
+            <button id="startBtn" class="pulse-btn" onclick="startPresentation()">Bắt Đầu Trình Chiếu &nbsp;<i class="fas fa-play"></i></button>
         </div>
     </div>
 
@@ -218,25 +659,27 @@
 
     <!-- Modal Cài Đặt -->
     <div class="modal-overlay" id="settingsModal">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content" style="max-width: 580px;">
             <div class="modal-header">
                 <div class="modal-title"><i class="fas fa-gear"></i> Cài Đặt Nguồn Video</div>
                 <button class="close-btn" onclick="closeModal('settingsModal')"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="settings-body">
                 <div class="settings-group">
-                    <label>Link Video Thực Hành (Slide 3):</label>
+                    <label><i class="fas fa-film" style="color:var(--accent-cyan);margin-right:6px;"></i>Link Video Thực Hành (Slide 3):</label>
                     <input type="text" id="inputVid1" value="https://files.catbox.moe/i6nhjk.mp4">
                 </div>
                 <div class="settings-group">
-                    <label>Link Nhạc/Âm thanh (Slide 3):</label>
+                    <label><i class="fas fa-music" style="color:var(--accent-green);margin-right:6px;"></i>Link Nhạc/Âm thanh (Slide 3):</label>
                     <input type="text" id="inputAud1" value="https://files.catbox.moe/jhi1g7.mp3">
                 </div>
                 <div class="settings-group">
-                    <label>Link Video Đánh Giá (Slide 5):</label>
+                    <label><i class="fas fa-film" style="color:var(--accent-yellow);margin-right:6px;"></i>Link Video Đánh Giá (Slide 5):</label>
                     <input type="text" id="inputVid2" value="https://files.catbox.moe/91hic7.mp4">
                 </div>
-                <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px; font-size: 1.1rem;" onclick="saveSettings()">Cập Nhật</button>
+                <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px;font-size:1rem;padding:13px;" onclick="saveSettings()">
+                    <i class="fas fa-check"></i>&nbsp; Cập Nhật
+                </button>
             </div>
         </div>
     </div>
@@ -244,6 +687,7 @@
     <!-- Navbar -->
     <div class="navbar glass-box">
         <div class="logo"><img src="https://files.catbox.moe/61dbof.jpg" alt="Logo"> NHÓM 5</div>
+        <div class="nav-separator"></div>
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="activateTab(this); closeModal('overviewModal'); closeModal('settingsModal');"><i class="fas fa-desktop"></i> Thuyết Trình</button>
             <button class="nav-tab" onclick="activateTab(this); openModal('overviewModal');"><i class="fas fa-border-all"></i> Tổng Quan</button>
@@ -260,41 +704,58 @@
             <div class="dashboard-section">
                 <div class="dashboard-title">Tiến Độ</div>
                 <svg class="progress-ring" viewBox="0 0 140 140">
+                    <defs>
+                        <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#059669"/>
+                            <stop offset="100%" style="stop-color:#34d399"/>
+                        </linearGradient>
+                    </defs>
                     <circle cx="70" cy="70" r="60" class="progress-circle"></circle>
                     <circle cx="70" cy="70" r="60" class="progress-circle-fill" id="progressFill"></circle>
                 </svg>
-                <div class="progress-text"><div class="progress-percent" id="progressPercent">0%</div></div>
+                <div class="progress-text">
+                    <span class="progress-percent" id="progressPercent">0%</span>Hoàn thành
+                </div>
             </div>
 
             <div class="dashboard-section">
-                <div class="dashboard-title">Trạng Thái Slide</div>
+                <div class="dashboard-title">Trạng Thái</div>
                 <div class="slide-info-item">
-                    <div class="slide-info-label">Đang chiếu slide</div>
+                    <div class="slide-info-label">Slide</div>
                     <div class="slide-info-value" id="slideNumber">1 / 8</div>
                 </div>
-                <div class="slide-info-item" style="background: rgba(14,165,233,0.1); border-color: rgba(14,165,233,0.2);">
-                    <div class="slide-info-label" style="color: var(--accent-cyan);">Hoạt động</div>
-                    <div class="slide-info-value" id="slideStatus" style="color: var(--text-primary);">Đang nạp...</div>
+                <div class="slide-info-item" style="border-left: 3px solid var(--accent-green);">
+                    <div class="slide-info-label">Nội dung</div>
+                    <div id="slideTitleInfo">Đang tải...</div>
+                </div>
+                <div class="slide-info-item" style="background:rgba(14,165,233,0.08);border-color:rgba(14,165,233,0.22);">
+                    <div class="slide-info-label" style="color:var(--accent-cyan);">Hoạt động</div>
+                    <div class="slide-info-value" id="slideStatus">Đang nạp...</div>
                 </div>
             </div>
 
             <div class="dashboard-section" style="margin-top: auto;">
                 <div class="dashboard-title">Thực Hiện Bởi</div>
-                <div class="slide-info-item" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.2);">
-                    <div class="slide-info-value" style="color: var(--accent-green); text-align: center; font-size: 1.2rem; letter-spacing: 2px;"><i class="fas fa-users"></i> NHÓM 5</div>
+                <div class="slide-info-item" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.22);text-align:center;">
+                    <div class="slide-info-value" style="color:var(--accent-green);font-size:1.05rem;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:7px;">
+                        <i class="fas fa-users"></i> NHÓM 5
+                    </div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);font-weight:700;margin-top:4px;letter-spacing:0.5px;">Sinh Học — K24</div>
                 </div>
             </div>
         </div>
 
         <div class="center-wrapper">
-            
+
             <!-- Slide 1 -->
             <div class="slide glass-panel active">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298343020-77c1cbf9-5314-4391-a52c-1e0509b24b34.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h1 class="anim-1"><span class="icon-grad" style="margin: 0 auto 10px; width:70px; height:70px; border-radius:24px; font-size:2.2rem; background: var(--accent-green); color: white; border: none;"><i class="fas fa-flask-vial"></i></span><br>Báo Cáo Thực Hành Sinh Học</h1>
-                    <h2 class="anim-2" style="font-size:1.7rem; color: var(--accent-cyan); margin-bottom: 10px;">Dự Án: Thí Nghiệm Lên Men Dưa Chua</h2>
+                    <h1 class="anim-1">
+                        <span class="icon-grad" style="margin:0 auto 14px;width:70px;height:70px;border-radius:22px;font-size:2.1rem;background:linear-gradient(135deg,var(--accent-green-dark),var(--accent-green));color:white;box-shadow:0 8px 24px rgba(16,185,129,0.38);"><i class="fas fa-flask-vial"></i></span>
+                        <br>Báo Cáo Thực Hành Sinh Học
+                    </h1>
+                    <h2 class="anim-2" style="font-size:1.55rem;color:var(--accent-cyan);margin-bottom:12px;">Dự Án: Thí Nghiệm Lên Men Dưa Chua</h2>
                     <p class="anim-3 intro-text">Lên men lactic là một quá trình sinh học thú vị, giúp bảo quản rau củ lâu dài và tạo ra món ăn giàu men vi sinh tự nhiên, rất có lợi cho hệ tiêu hóa của con người.</p>
                     <div class="team-members anim-3">
                         <div class="member-badge"><i class="fas fa-user-graduate"></i> Lưu Phú Gia Bảo</div>
@@ -303,7 +764,7 @@
                         <div class="member-badge"><i class="fas fa-user-graduate"></i> Vũ Anh Khoa</div>
                     </div>
                     <div class="ingredient-tags anim-4">
-                        <div class="tag tag-green" style="border-color: var(--accent-green);"><i class="fas fa-leaf"></i> Bắp cải (Chính)</div>
+                        <div class="tag tag-green" style="border-color:rgba(16,185,129,0.3);"><i class="fas fa-leaf"></i> Bắp cải (Chính)</div>
                         <div class="tag tag-orange"><i class="fas fa-carrot"></i> Cà rốt (Bổ sung)</div>
                         <div class="tag tag-blue"><i class="fas fa-cubes"></i> Muối hạt</div>
                         <div class="tag tag-yellow"><i class="fas fa-cube"></i> Đường trắng</div>
@@ -316,9 +777,11 @@
             <!-- Slide 2 -->
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298414552-2543f253-fc3d-4af2-9106-3058ecb6916a.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-list-ol"></i></span> Quy Trình Thực Hiện</h2>
+                    <h2 class="anim-1">
+                        <span class="icon-grad" style="background:rgba(14,165,233,0.12);color:var(--accent-cyan);box-shadow:0 4px 14px rgba(14,165,233,0.2);"><i class="fas fa-list-ol"></i></span>
+                        Quy Trình Thực Hiện
+                    </h2>
                     <div class="steps-grid">
                         <div class="step-item anim-2"><div class="step-number">1</div><div class="step-text">Rửa sạch bắp cải và một ít cà rốt, phơi héo để giảm lượng nước giúp dưa giòn.</div></div>
                         <div class="step-item anim-2"><div class="step-number">2</div><div class="step-text">Cắt bắp cải thành khúc (0,5–0,8cm), cà rốt bào sợi để bổ sung màu sắc.</div></div>
@@ -333,9 +796,11 @@
             <!-- Slide 3 (Video 1) -->
             <div class="slide glass-panel" data-type="video">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298449511-233b2a2f-769a-420f-8823-510e2740ddfe.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1"><span class="icon-grad"><i class="fas fa-video"></i></span> Video Thực Hành</h2>
+                    <h2 class="anim-1">
+                        <span class="icon-grad" style="background:rgba(239,68,68,0.1);color:var(--accent-red);box-shadow:0 4px 14px rgba(239,68,68,0.15);"><i class="fas fa-video"></i></span>
+                        Video Thực Hành
+                    </h2>
                     <div class="video-container anim-2">
                         <video id="vid1" controls muted playsinline><source src="https://files.catbox.moe/i6nhjk.mp4" type="video/mp4"></video>
                         <audio id="aud1" class="bg-music"><source src="https://files.catbox.moe/jhi1g7.mp3" type="audio/mpeg"></audio>
@@ -347,11 +812,10 @@
             <!-- Slide 4 -->
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298467888-8b99876f-f71e-47b4-acdd-7ec42e0b5034.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
                     <i class="fas fa-award end-icon anim-1"></i>
-                    <h1 class="anim-2" style="font-size: 3.5rem;">THÀNH QUẢ SAU 2 NGÀY</h1>
-                    <p class="anim-3" style="font-size: 1.25rem; color: var(--text-secondary); line-height: 1.8; max-width: 800px; text-align: center; margin-top: 15px; font-weight: 600;">
+                    <h1 class="anim-2 text-gradient-green" style="font-size:3.2rem;">THÀNH QUẢ SAU 2 NGÀY</h1>
+                    <p class="anim-3" style="font-size:1.2rem;color:var(--text-secondary);line-height:1.85;max-width:800px;text-align:center;margin-top:18px;font-weight:600;">
                         Sản phẩm đã chuyển sang màu vàng đặc trưng của dưa chín, cấu trúc rau vẫn giữ được độ giòn, nước ngâm có hiện tượng đục nhẹ do sự phát triển của vi sinh vật.
                     </p>
                 </div>
@@ -361,9 +825,11 @@
             <!-- Slide 5 (Video 2) -->
             <div class="slide glass-panel" data-type="video">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298492260-381fb9c8-115a-4d06-bff8-1c67aa17a83a.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(245,158,11,0.1); color: var(--accent-yellow);"><i class="fas fa-microscope"></i></span> Đánh Giá Cảm Quan</h2>
+                    <h2 class="anim-1">
+                        <span class="icon-grad" style="background:rgba(245,158,11,0.12);color:var(--accent-yellow);box-shadow:0 4px 14px rgba(245,158,11,0.2);"><i class="fas fa-microscope"></i></span>
+                        Đánh Giá Cảm Quan
+                    </h2>
                     <div class="video-container anim-2">
                         <video id="vid2" controls playsinline><source src="https://files.catbox.moe/91hic7.mp4" type="video/mp4"></video>
                     </div>
@@ -374,15 +840,17 @@
             <!-- Slide 6 -->
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298530172-6e45ec93-5749-4d0d-90ee-7ffbc1b2931e.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-table-list"></i></span> Bảng So Sánh Kết Quả</h2>
-                    <div class="anim-2" style="width: 100%; display: flex; justify-content: center;">
+                    <h2 class="anim-1">
+                        <span class="icon-grad" style="background:rgba(14,165,233,0.12);color:var(--accent-cyan);box-shadow:0 4px 14px rgba(14,165,233,0.2);"><i class="fas fa-table-list"></i></span>
+                        Bảng So Sánh Kết Quả
+                    </h2>
+                    <div class="anim-2" style="width:100%;display:flex;justify-content:center;">
                         <table>
                             <thead><tr><th>Thời điểm</th><th>Màu sắc</th><th>Mùi, vị</th><th>Trạng thái</th><th>Độ pH (ước tính)</th></tr></thead>
                             <tbody>
-                                <tr><td><b>Ban đầu (Mới trộn)</b></td><td>Xanh lá, trắng sáng</td><td>Hăng của rau sống, mặn</td><td>Cứng, giòn</td><td style="color: var(--accent-cyan); font-weight: 800;">~ 6.0 – 7.0</td></tr>
-                                <tr><td><b>Sau 2 ngày ủ</b></td><td>Chuyển vàng đặc trưng</td><td>Vị chua dịu</td><td>Mềm hơn, giữ độ giòn</td><td style="color: var(--accent-green); font-weight: 800;">~ 3.0 – 4.0</td></tr>
+                                <tr><td><b>Ban đầu (Mới trộn)</b></td><td>Xanh lá, trắng sáng</td><td>Hăng của rau sống, mặn</td><td>Cứng, giòn</td><td style="color:var(--accent-cyan);font-weight:800;">~ 6.0 – 7.0</td></tr>
+                                <tr><td><b>Sau 2 ngày ủ</b></td><td>Chuyển vàng đặc trưng</td><td>Vị chua dịu</td><td>Mềm hơn, giữ độ giòn</td><td style="color:var(--accent-green);font-weight:800;">~ 3.0 – 4.0</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -393,9 +861,11 @@
             <!-- Slide 7 -->
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298554313-ca323719-0b36-4b38-b591-9ad9afcc076c.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(239,68,68,0.1); color: #ef4444;"><i class="fas fa-comments"></i></span> Trả Lời Thảo Luận</h2>
+                    <h2 class="anim-1">
+                        <span class="icon-grad" style="background:rgba(239,68,68,0.1);color:var(--accent-red);box-shadow:0 4px 14px rgba(239,68,68,0.15);"><i class="fas fa-comments"></i></span>
+                        Trả Lời Thảo Luận
+                    </h2>
                     <div class="qa-grid">
                         <div class="qa-item anim-2">
                             <div class="qa-question">Vi khuẩn lên men dưa chua có từ những nguồn nào? Cách chủ động bổ sung?</div>
@@ -417,30 +887,30 @@
             <!-- Slide 8 -->
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298575698-7739e396-27a3-4511-ad1d-c824f1a547c4.mp3"></audio>
-                
                 <div class="slide-content-wrapper">
                     <i class="fas fa-check-circle end-icon anim-1"></i>
-                    <h1 class="anim-2" style="font-size: 3rem;">Hoàn Thành Bài Thí Nghiệm!</h1>
-                    <p class="anim-3" style="font-size: 1.2rem; color: var(--text-secondary); margin-top: 15px; font-weight: 600;">Cảm ơn thầy cô và các bạn đã chú ý lắng nghe! 🎉</p>
+                    <h1 class="anim-2 text-gradient-green" style="font-size:3rem;">Hoàn Thành Bài Thí Nghiệm!</h1>
+                    <p class="anim-3" style="font-size:1.15rem;color:var(--text-secondary);margin-top:18px;font-weight:600;">Cảm ơn thầy cô và các bạn đã chú ý lắng nghe! 🎉</p>
                 </div>
                 <div class="footer-credit anim-4">Cre by Gia Bảo K24</div>
             </div>
+
         </div>
     </div>
 
     <!-- Controls -->
     <div class="controls" id="controlBar">
         <button class="btn" onclick="forcePrevSlide()"><i class="fas fa-chevron-left"></i> Quay Lại</button>
-        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <div class="ctrl-divider"></div>
         <button class="btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-pause"></i> Tạm Dừng</button>
-        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <div class="ctrl-divider"></div>
         <div class="timer-bar"><div id="timerFill" class="timer-fill"></div></div>
         <div id="timeText" class="time-text">--</div>
-        <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1);"></div>
+        <div class="ctrl-divider"></div>
         <button class="btn btn-primary" onclick="forceNextSlide()">Tiếp Theo <i class="fas fa-chevron-right"></i></button>
     </div>
 
-    <div class="slide-counter"><i class="fas fa-layer-group" style="color: var(--accent-cyan); margin-right: 5px;"></i> <span id="slideCounter">1</span> / 8</div>
+    <div class="slide-counter"><i class="fas fa-layer-group" style="color:var(--accent-cyan);"></i> <span id="slideCounter">1</span> / 8</div>
 
     <script>
         const slides = document.querySelectorAll('.slide');
@@ -448,43 +918,92 @@
         let isPaused = false;
         let timerInterval;
         let timeLeft = 0;
-        const WAIT_TIME = 3000; 
+        const WAIT_TIME = 3000;
+
+        const slideTitles = ['Giới Thiệu', 'Các Bước Tiến Hành', 'Video Thực Hành', 'Thành Quả', 'Đánh Giá Cảm Quan', 'Bảng So Sánh', 'Thảo Luận', 'Kết Thúc'];
+
+        // ===== TOAST =====
+        function showToast(message, icon = 'fa-check-circle', color = 'var(--accent-green)') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderLeftColor = color;
+            toast.innerHTML = `<i class="fas ${icon} toast-icon" style="color:${color}"></i> ${message}`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 420);
+            }, 3000);
+        }
+
+        // ===== CURSOR GLOW =====
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', e => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top  = e.clientY + 'px';
+        });
+
+        // ===== PARTICLES =====
+        (function createParticles() {
+            const screen = document.getElementById('startScreen');
+            const colors = [
+                'rgba(16,185,129,0.18)', 'rgba(14,165,233,0.14)',
+                'rgba(245,158,11,0.12)', 'rgba(167,243,208,0.22)',
+                'rgba(186,230,253,0.18)'
+            ];
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = Math.random() * 22 + 7;
+                p.style.cssText = `
+                    width:${size}px;height:${size}px;
+                    left:${Math.random() * 100}%;
+                    background:${colors[Math.floor(Math.random() * colors.length)]};
+                    animation-duration:${Math.random() * 9 + 6}s;
+                    animation-delay:${Math.random() * 6}s;
+                    border:1px solid rgba(255,255,255,0.35);
+                    backdrop-filter:blur(2px);
+                `;
+                screen.appendChild(p);
+            }
+        })();
 
         function startPresentation() {
             document.getElementById('startScreen').style.opacity = '0';
-            setTimeout(() => document.getElementById('startScreen').style.display = 'none', 300);
+            setTimeout(() => document.getElementById('startScreen').style.display = 'none', 600);
             buildOverviewGrid();
-            
-            // Kích hoạt audio context
             const dummyAudio = new Audio();
-            dummyAudio.play().catch(e=>{});
-
-            setTimeout(() => { initSlide(); }, 300); 
+            dummyAudio.play().catch(e => {});
+            setTimeout(() => { initSlide(); }, 300);
         }
 
         function stopAllMediaAndSpeech() {
-            document.querySelectorAll('video').forEach(vid => { 
-                vid.pause(); vid.currentTime = 0; vid.classList.remove('video-blurred'); 
+            document.querySelectorAll('video').forEach(vid => {
+                vid.pause(); vid.currentTime = 0; vid.classList.remove('video-blurred');
             });
-            document.querySelectorAll('audio').forEach(aud => { 
-                aud.pause(); aud.currentTime = 0; 
+            document.querySelectorAll('audio').forEach(aud => {
+                aud.pause(); aud.currentTime = 0;
             });
-
             clearInterval(timerInterval);
-            document.getElementById('timerFill').style.transform = `scaleX(0)`;
-            document.getElementById('timeText').innerText = "--";
+            document.getElementById('timerFill').style.transform = 'scaleX(0)';
+            document.getElementById('timeText').innerText = '--';
         }
 
         function initSlide() {
             stopAllMediaAndSpeech();
-
             slides.forEach(s => s.classList.remove('active'));
             isPaused = false;
-            
+
             document.getElementById('controlBar').style.display = 'flex';
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> Tạm Dừng';
             document.getElementById('slideCounter').textContent = currentSlide + 1;
             document.getElementById('slideNumber').textContent = (currentSlide + 1) + ' / ' + slides.length;
+
+            const titleEl = document.getElementById('slideTitleInfo');
+            if (titleEl) titleEl.textContent = slideTitles[currentSlide] || '';
+
             updateDashboard();
 
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -493,29 +1012,25 @@
             setTimeout(() => {
                 const slide = slides[currentSlide];
                 slide.classList.add('active');
-
                 if (slide.getAttribute('data-type') === 'video') {
                     handleVideoSlide(slide);
                 } else {
-                    handleAudioSlide(slide); 
+                    handleAudioSlide(slide);
                 }
             }, 50);
         }
 
         function handleAudioSlide(slide) {
             const voice = slide.querySelector('.voiceover');
-            
             if (voice) {
-                updateStatus("Đang thuyết trình...", "Đọc...");
+                updateStatus('Đang thuyết trình...', 'Đọc...');
                 voice.currentTime = 0;
-                
                 voice.onerror = () => { startWaitTimer(); };
                 voice.onended = () => { startWaitTimer(); };
-
                 if (!isPaused) {
                     let playPromise = voice.play();
                     if (playPromise !== undefined) {
-                        playPromise.catch(e => { updateStatus("Lỗi Audio / Bấm Play", "Lỗi"); });
+                        playPromise.catch(e => { updateStatus('Lỗi Audio / Bấm Play', 'Lỗi'); });
                     }
                 }
             } else {
@@ -525,42 +1040,36 @@
 
         function handleVideoSlide(slide) {
             const vid = slide.querySelector('video');
-            const bgMusic = slide.querySelector('.bg-music'); 
+            const bgMusic = slide.querySelector('.bg-music');
             const voice = slide.querySelector('.voiceover');
-            
-            vid.classList.add('video-blurred'); 
-
+            vid.classList.add('video-blurred');
             if (voice) {
-                updateStatus("Đang đọc giới thiệu...", "Đọc...");
+                updateStatus('Đang đọc giới thiệu...', 'Đọc...');
                 voice.currentTime = 0;
-                
                 voice.onerror = () => { voice.onended(); };
                 voice.onended = () => {
-                    vid.classList.remove('video-blurred'); 
-                    updateStatus("Đang phát Video...", "Video");
+                    vid.classList.remove('video-blurred');
+                    updateStatus('Đang phát Video...', 'Video');
                     if (!isPaused && slide.classList.contains('active')) {
-                        vid.play().catch(e=>{});
-                        if (bgMusic) bgMusic.play().catch(e=>{});
+                        vid.play().catch(e => {});
+                        if (bgMusic) bgMusic.play().catch(e => {});
                     }
                 };
-
                 if (!isPaused) {
                     let playPromise = voice.play();
-                    if (playPromise !== undefined) playPromise.catch(e => { updateStatus("Bấm Play thủ công", "Lỗi"); });
+                    if (playPromise !== undefined) playPromise.catch(e => { updateStatus('Bấm Play thủ công', 'Lỗi'); });
                 }
             } else {
                 vid.classList.remove('video-blurred');
-                updateStatus("Đang phát Video...", "Video");
-                if(!isPaused) { vid.play().catch(e=>{}); if(bgMusic) bgMusic.play().catch(e=>{}); }
+                updateStatus('Đang phát Video...', 'Video');
+                if (!isPaused) { vid.play().catch(e => {}); if (bgMusic) bgMusic.play().catch(e => {}); }
             }
-
             vid.onended = () => { startWaitTimer(); };
         }
 
         function startWaitTimer() {
             timeLeft = WAIT_TIME;
-            updateStatus("Sắp chuyển trang...", "Đợi...");
-            
+            updateStatus('Sắp chuyển trang...', 'Đợi...');
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!isPaused) {
@@ -569,7 +1078,6 @@
                     document.getElementById('timeText').innerText = sec + 's';
                     let pct = Math.max(0, timeLeft / WAIT_TIME);
                     document.getElementById('timerFill').style.transform = `scaleX(${pct})`;
-
                     if (timeLeft <= 0) { clearInterval(timerInterval); autoNextSlide(); }
                 }
             }, 100);
@@ -587,8 +1095,8 @@
         }
 
         function autoNextSlide() {
-            if (currentSlide < slides.length - 1) { currentSlide++; initSlide(); } 
-            else { updateStatus("Đã Hoàn Thành!", "Hết"); document.getElementById('controlBar').style.display = 'none'; }
+            if (currentSlide < slides.length - 1) { currentSlide++; initSlide(); }
+            else { updateStatus('Đã Hoàn Thành!', 'Hết'); document.getElementById('controlBar').style.display = 'none'; }
         }
 
         function forceNextSlide() {
@@ -603,25 +1111,25 @@
         function togglePlayPause() {
             isPaused = !isPaused;
             document.getElementById('playPauseBtn').innerHTML = isPaused ? '<i class="fas fa-play"></i> Tiếp Tục' : '<i class="fas fa-pause"></i> Tạm Dừng';
-            
+
             const cur = slides[currentSlide];
             const voice = cur.querySelector('.voiceover');
             const vid = cur.querySelector('video');
             const bgMusic = cur.querySelector('.bg-music');
 
-            if(isPaused) {
-                if(voice) voice.pause();
-                if(vid) vid.pause();
-                if(bgMusic) bgMusic.pause();
+            if (isPaused) {
+                if (voice) voice.pause();
+                if (vid) vid.pause();
+                if (bgMusic) bgMusic.pause();
             } else {
                 if (cur.getAttribute('data-type') !== 'video') {
                     if (voice && !voice.ended && voice.currentTime > 0) voice.play();
                 } else {
                     if (voice && !voice.ended && voice.currentTime > 0) {
-                        voice.play(); 
+                        voice.play();
                     } else if (vid && !vid.ended && !vid.classList.contains('video-blurred')) {
-                        vid.play(); 
-                        if(bgMusic) bgMusic.play();
+                        vid.play();
+                        if (bgMusic) bgMusic.play();
                     }
                 }
             }
@@ -632,27 +1140,29 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         }
 
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', e => {
             if (e.key === 'ArrowRight') forceNextSlide();
             else if (e.key === 'ArrowLeft') forcePrevSlide();
             else if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); togglePlayPause(); }
         });
 
-        function openModal(id) { 
-            document.getElementById(id).classList.add('active'); 
-            stopAllMediaAndSpeech(); 
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            stopAllMediaAndSpeech();
         }
-        
-        function closeModal(id) { 
+
+        function closeModal(id) {
             document.getElementById(id).classList.remove('active');
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab')[0].classList.add('active');
             initSlide();
         }
-        
-        function activateTab(el) { document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
 
-        const slideTitles = ['Giới Thiệu', 'Các Bước Tiến Hành', 'Video Thực Hành', 'Thành Quả', 'Đánh Giá Cảm Quan', 'Bảng So Sánh', 'Thảo Luận', 'Kết Thúc'];
+        function activateTab(el) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
         function buildOverviewGrid() {
             const grid = document.getElementById('overviewGrid');
             grid.innerHTML = '';
@@ -667,11 +1177,11 @@
         }
 
         function jumpToSlide(index) {
-            currentSlide = index; 
+            currentSlide = index;
             document.getElementById('overviewModal').classList.remove('active');
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab')[0].classList.add('active');
-            initSlide(); 
+            initSlide();
         }
 
         function saveSettings() {
@@ -679,14 +1189,14 @@
             const a1 = document.getElementById('inputAud1').value;
             const v2 = document.getElementById('inputVid2').value;
 
-            if(v1) { document.getElementById('vid1').src = v1; document.getElementById('vid1').load(); }
-            if(a1) { document.getElementById('aud1').src = a1; document.getElementById('aud1').load(); }
-            if(v2) { document.getElementById('vid2').src = v2; document.getElementById('vid2').load(); }
+            if (v1) { document.getElementById('vid1').src = v1; document.getElementById('vid1').load(); }
+            if (a1) { document.getElementById('aud1').src = a1; document.getElementById('aud1').load(); }
+            if (v2) { document.getElementById('vid2').src = v2; document.getElementById('vid2').load(); }
 
             document.getElementById('settingsModal').classList.remove('active');
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab')[0].classList.add('active');
-            alert('Cập nhật Video/Audio thành công!');
+            showToast('Cập nhật Video/Audio thành công!', 'fa-check-circle', 'var(--accent-green)');
             initSlide();
         }
     </script>
