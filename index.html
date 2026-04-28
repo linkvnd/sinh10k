@@ -10,27 +10,17 @@
 
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.60);
-            --glass-border: rgba(255, 255, 255, 0.92);
-            --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
-            --glass-blur: blur(28px);
-
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            --glass-blur: blur(25px);
             --accent-green: #10b981;
-            --accent-green-light: #34d399;
-            --accent-green-dark: #059669;
             --accent-cyan: #0ea5e9;
-            --accent-cyan-light: #38bdf8;
             --accent-yellow: #f59e0b;
-            --accent-red: #ef4444;
-
             --text-primary: #0f172a;
             --text-secondary: #334155;
             --text-muted: #64748b;
-
-            --radius-sm: 10px;
-            --radius-md: 16px;
-            --radius-lg: 22px;
-            --radius-xl: 30px;
+            --ctrl-h: 64px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,722 +30,650 @@
             font-family: 'Be Vietnam Pro', sans-serif;
             color: var(--text-primary);
             display: flex; flex-direction: column; position: relative;
-            background: linear-gradient(-45deg, #d1fae5, #e0f2fe, #f8fafc, #ecfdf5, #bfdbfe, #f0fdf4);
-            background-size: 600% 600%;
-            animation: gradientBG 20s ease infinite;
+            background: linear-gradient(-45deg, #e0f2fe, #f0fdf4, #f8fafc, #dcfce3);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
-        /* Subtle dot-grid texture */
-        body::after {
-            content: '';
-            position: fixed; inset: 0; pointer-events: none; z-index: 1;
-            background-image: radial-gradient(rgba(16,185,129,0.07) 1px, transparent 1px);
-            background-size: 28px 28px;
-        }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        @keyframes gradientBG {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        .circle-decor { position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; opacity: 0.6; }
+        .circle-1 { width: 450px; height: 450px; background: #6ee7b7; top: -50px; left: -50px; animation: floatDecor 10s infinite alternate; }
+        .circle-2 { width: 500px; height: 500px; background: #bae6fd; bottom: -100px; right: 5%; animation: floatDecor 15s infinite alternate-reverse; }
+        .circle-3 { width: 400px; height: 400px; background: #fbcfe8; top: 30%; left: 40%; animation: floatDecor 12s infinite alternate; }
+        @keyframes floatDecor { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(50px) scale(1.1); } }
 
-        /* ---- Blobs ---- */
-        .circle-decor {
-            position: absolute; border-radius: 50%; filter: blur(90px);
-            z-index: 0; pointer-events: none; mix-blend-mode: multiply;
-        }
-        .circle-1 { width: 520px; height: 520px; background: radial-gradient(circle, #6ee7b7, #34d399); top: -100px; left: -100px; opacity: 0.45; animation: blob1 13s ease-in-out infinite alternate; }
-        .circle-2 { width: 560px; height: 560px; background: radial-gradient(circle, #93c5fd, #7dd3fc); bottom: -130px; right: 2%; opacity: 0.40; animation: blob2 17s ease-in-out infinite alternate-reverse; }
-        .circle-3 { width: 430px; height: 430px; background: radial-gradient(circle, #f9a8d4, #fda4af); top: 25%; left: 36%; opacity: 0.35; animation: blob3 15s ease-in-out infinite alternate; }
-        .circle-4 { width: 320px; height: 320px; background: radial-gradient(circle, #fde68a, #fcd34d); top: 5%; right: 18%; opacity: 0.28; animation: blob1 11s ease-in-out infinite alternate-reverse; }
-
-        @keyframes blob1 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(50px, 60px) scale(1.08); } }
-        @keyframes blob2 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-40px,-50px) scale(1.06); } }
-        @keyframes blob3 { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(30px, 45px) scale(1.1); } }
-
-        /* ======================= START SCREEN ======================= */
+        /* =================== START SCREEN =================== */
         #startScreen {
             position: fixed; inset: 0;
-            background: linear-gradient(135deg, rgba(209,250,229,0.85), rgba(224,242,254,0.85), rgba(240,253,244,0.9));
-            backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
-            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #f0fdf9 0%, #e0f7ff 50%, #f8fafc 100%);
+            z-index: 10000; display: flex; justify-content: center; align-items: center; overflow: hidden;
             transition: opacity 0.6s ease;
         }
 
-        .particle {
-            position: absolute; border-radius: 50%; pointer-events: none;
-            animation: particleRise linear infinite;
-        }
-        @keyframes particleRise {
-            0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
-            8%   { opacity: 1; }
-            92%  { opacity: 0.8; }
-            100% { transform: translateY(-15vh) rotate(540deg); opacity: 0; }
-        }
+        .start-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.7; animation: orbFloat 15s infinite ease-in-out; }
+        .start-orb-1 { width: 600px; height: 600px; background: rgba(16, 185, 129, 0.3); top: -100px; left: -100px; }
+        .start-orb-2 { width: 500px; height: 500px; background: rgba(14, 165, 233, 0.2); bottom: -100px; right: -50px; animation-delay: -5s; }
+        .start-orb-3 { width: 300px; height: 300px; background: rgba(245, 158, 11, 0.15); top: 60%; left: 20%; animation-delay: -8s; }
+        @keyframes orbFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(30px, 40px) scale(1.1); } }
 
-        .start-card {
-            background: rgba(255,255,255,0.78);
-            border: 1px solid rgba(255,255,255,0.95);
-            border-radius: 36px;
-            padding: 52px 44px;
-            box-shadow: 0 32px 90px rgba(16,185,129,0.12), 0 12px 35px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.85);
-            text-align: center;
-            max-width: 860px; width: 90%;
+        .start-content {
+            position: relative; z-index: 1; text-align: center;
             display: flex; flex-direction: column; align-items: center;
-            animation: cardIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            position: relative; overflow: hidden;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            padding: 70px 60px; border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.85);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.06), 0 0 0 12px rgba(255,255,255,0.18) inset;
+            max-width: 920px; width: 92%;
+            animation: startPopIn 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        /* Inner shimmer sweep */
-        .start-card::before {
-            content: ''; position: absolute; top: 0; left: -70%;
-            width: 55%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
-            animation: shimmerSweep 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes shimmerSweep { 0% { left: -70%; } 100% { left: 120%; } }
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(45px) scale(0.9); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        @keyframes startPopIn { from { opacity: 0; transform: scale(0.88) translateY(40px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        .logo-ring {
-            position: relative; width: 150px; height: 150px; margin-bottom: 28px;
-            display: flex; align-items: center; justify-content: center;
+        .start-logo-wrap {
+            position: relative; margin-bottom: 28px;
         }
-        .logo-ring img {
-            width: 132px; height: 132px; border-radius: 50%;
-            box-shadow: 0 15px 45px rgba(16,185,129,0.22), 0 0 0 4px white, 0 0 0 7px rgba(16,185,129,0.12);
-            object-fit: cover; position: relative; z-index: 1;
-        }
-        .ring-spinner {
-            position: absolute; inset: 0; border-radius: 50%;
-            background: conic-gradient(var(--accent-green), var(--accent-cyan), var(--accent-green-light), transparent 60%);
-            animation: spinRing 5s linear infinite;
-            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), white calc(100% - 3px));
-            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), white calc(100% - 3px));
+        .start-logo-ring {
+            position: absolute; inset: -8px; border-radius: 50%;
+            border: 3px solid transparent;
+            background: linear-gradient(135deg, #10b981, #0ea5e9) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: spinRing 4s linear infinite;
         }
         @keyframes spinRing { to { transform: rotate(360deg); } }
-
-        .start-card h1 {
-            font-size: 3.5rem; font-weight: 900; margin-bottom: 13px; letter-spacing: -1px; line-height: 1.15;
-            background: linear-gradient(135deg, #064e3b 0%, var(--accent-green) 45%, #0369a1 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        .start-content img {
+            width: 170px; height: 170px; border-radius: 50%;
+            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.25);
+            border: 5px solid white; object-fit: cover;
+            animation: heartbeat 3s infinite;
         }
-        .start-card p {
-            font-size: 1.18rem; color: var(--text-secondary); margin-bottom: 36px;
-            line-height: 1.75; font-weight: 500; max-width: 660px;
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+
+        .start-badge {
+            background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(14,165,233,0.12));
+            border: 1px solid rgba(16,185,129,0.25);
+            color: var(--accent-green); font-size: 0.8rem; font-weight: 800;
+            padding: 5px 14px; border-radius: 50px; letter-spacing: 1.5px;
+            text-transform: uppercase; margin-bottom: 14px; display: inline-block;
+        }
+        .start-content h1 {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #059669, #0284c7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.1;
+        }
+        .start-content h2 { font-size: 1.6rem; color: var(--text-secondary); margin-bottom: 35px; font-weight: 600; }
+
+        .start-divider {
+            width: 60px; height: 3px; border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+            margin: 0 auto 35px;
         }
 
-        .pulse-btn {
-            padding: 16px 52px; font-size: 1.3rem; font-weight: 900; color: white;
-            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
-            background-size: 200% 200%;
+        .btn-start-premium {
+            position: relative; padding: 18px 56px; font-size: 1.4rem; font-weight: 800; color: white;
+            background: linear-gradient(135deg, var(--accent-green), #0ea5e9);
             border: none; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Be Vietnam Pro', sans-serif;
-            animation: btnPulse 2.5s ease-in-out infinite;
-            position: relative; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.35);
+            font-family: 'Be Vietnam Pro', sans-serif; overflow: hidden; transition: 0.3s;
+            display: flex; align-items: center; gap: 14px;
         }
-        .pulse-btn::after {
-            content: ''; position: absolute; inset: 0; border-radius: 50px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.22), transparent 50%);
-            pointer-events: none;
+        .btn-start-premium::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+            transform: skewX(-25deg); animation: shine 3s infinite;
         }
-        .pulse-btn:hover { transform: scale(1.07) translateY(-3px); box-shadow: 0 22px 55px rgba(16,185,129,0.6), 0 8px 20px rgba(0,0,0,0.1); }
-        .pulse-btn:active { transform: scale(0.97); }
-        @keyframes btnPulse {
-            0%, 100% { box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 0 0 0 rgba(16,185,129,0.45); }
-            55%       { box-shadow: 0 14px 40px rgba(16,185,129,0.45), 0 0 0 18px rgba(16,185,129,0); }
-        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        .btn-start-premium:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 22px 45px rgba(14, 165, 233, 0.45); }
+        .btn-start-premium .btn-icon { font-size: 1.6rem; }
 
-        /* ======================= GLASS BASE ======================= */
+        /* =================== GLASS BOX =================== */
         .glass-box {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.72);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
         }
 
-        /* ======================= NAVBAR ======================= */
+        /* =================== NAVBAR =================== */
         .navbar {
-            position: relative; z-index: 100; height: 66px;
-            display: flex; align-items: center; padding: 0 22px; gap: 10px;
-            border-radius: 0 0 18px 18px; border-top: none;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,0.7);
+            position: relative; z-index: 100; height: 70px;
+            display: flex; align-items: center; padding: 0 24px; gap: 20px;
+            border-radius: 0 0 24px 24px; border-top: none;
+            flex-shrink: 0;
         }
         .logo {
             font-size: 1.3rem; font-weight: 900; color: var(--accent-green);
-            display: flex; align-items: center; gap: 10px; min-width: 165px;
-            text-transform: uppercase; letter-spacing: 2px;
+            display: flex; align-items: center; gap: 10px; min-width: 185px;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .logo img {
-            width: 35px; height: 35px; border-radius: 10px;
-            border: 2px solid rgba(16,185,129,0.35);
-            box-shadow: 0 4px 12px rgba(16,185,129,0.15);
-        }
-        .nav-separator { width: 1px; height: 26px; background: rgba(0,0,0,0.07); }
-        .nav-tabs {
-            display: flex; gap: 3px; padding: 5px;
-            background: rgba(0,0,0,0.04); border-radius: 14px;
-        }
+        .logo img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--accent-green); }
+
+        .nav-tabs { display: flex; gap: 8px; flex: 1; }
         .nav-tab {
-            padding: 7px 19px; border-radius: 10px; background: transparent; border: none;
-            color: var(--text-muted); font-family: 'Be Vietnam Pro', sans-serif;
-            font-weight: 700; font-size: 0.88rem; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex; align-items: center; gap: 7px; white-space: nowrap;
+            padding: 8px 16px; border-radius: 12px;
+            background: rgba(255,255,255,0.5); border: 1px solid transparent;
+            color: var(--text-secondary); font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            transition: all 0.25s ease; display: flex; align-items: center; gap: 7px;
         }
-        .nav-tab:hover { background: rgba(255,255,255,0.65); color: var(--text-primary); }
+        .nav-tab:hover { background: white; color: var(--text-primary); border-color: rgba(255,255,255,0.8); transform: translateY(-1px); }
         .nav-tab.active {
-            background: white; color: var(--accent-green); font-weight: 800;
-            box-shadow: 0 2px 14px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.9);
-        }
-        .nav-tab i { font-size: 0.82rem; }
-        .nav-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
-        .nav-icon-btn {
-            width: 37px; height: 37px; border-radius: 10px;
-            background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9);
-            color: var(--text-muted); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.25s ease; font-size: 0.88rem;
-        }
-        .nav-icon-btn:hover {
             background: white; color: var(--accent-green);
-            box-shadow: 0 4px 14px rgba(16,185,129,0.15);
-            transform: translateY(-1px);
+            border-color: rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        /* ======================= LAYOUT ======================= */
+        .nav-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+        .nav-icon-btn {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.6); border: 1px solid white;
+            color: var(--text-secondary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.25s;
+            position: relative;
+        }
+        .nav-icon-btn:hover { background: white; color: var(--accent-green); box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-1px); }
+        .nav-icon-btn[data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--text-primary); color: white; font-size: 0.72rem; font-weight: 700;
+            padding: 4px 9px; border-radius: 7px; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: 0.2s;
+        }
+        .nav-icon-btn[data-tooltip]:hover::after { opacity: 1; }
+
+        /* =================== MAIN LAYOUT =================== */
         .main-container {
-            display: flex; flex: 1; gap: 14px; padding: 14px 18px 14px;
-            overflow: hidden; position: relative; z-index: 10;
+            display: flex; flex: 1; gap: 18px; padding: 18px;
+            overflow: hidden; position: relative; z-index: 10; min-height: 0;
         }
 
-        /* ======================= SIDEBAR ======================= */
+        /* =================== SIDEBAR =================== */
         .sidebar {
-            width: 255px; padding: 18px 16px;
-            display: flex; flex-direction: column; gap: 15px; overflow: hidden;
+            width: 272px; padding: 22px; display: flex;
+            flex-direction: column; gap: 20px; overflow: hidden; flex-shrink: 0;
         }
-        .dashboard-section { display: flex; flex-direction: column; gap: 9px; }
+        .dashboard-section { display: flex; flex-direction: column; gap: 10px; }
         .dashboard-title {
-            font-size: 0.7rem; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 1.8px; color: var(--accent-cyan);
-            display: flex; align-items: center; gap: 7px;
+            font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--accent-cyan);
+            display: flex; align-items: center; gap: 6px;
         }
         .dashboard-title::before {
-            content: ''; width: 14px; height: 2.5px; border-radius: 2px;
-            background: var(--accent-cyan); flex-shrink: 0;
+            content: ''; width: 3px; height: 12px; border-radius: 2px;
+            background: var(--accent-cyan); display: inline-block;
         }
 
-        /* Progress Ring */
-        .progress-ring {
-            width: 108px; height: 108px; margin: 0 auto 3px;
-            filter: drop-shadow(0 4px 14px rgba(16,185,129,0.22));
-        }
-        .progress-circle { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 9; }
+        .progress-ring { width: 120px; height: 120px; margin: 4px auto; }
+        .progress-circle { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 8; }
         .progress-circle-fill {
-            fill: none; stroke: url(#progressGrad); stroke-width: 9; stroke-linecap: round;
-            transform-origin: center; transform: rotate(-90deg);
-            transition: stroke-dasharray 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+            fill: none; stroke: url(#progressGrad); stroke-width: 8;
+            stroke-linecap: round; transform-origin: center; transform: rotate(-90deg);
+            transition: stroke-dasharray 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .progress-text { text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
-        .progress-percent { font-size: 1.65rem; font-weight: 900; color: var(--accent-green); display: block; line-height: 1.1; }
+        .progress-text { text-align: center; }
+        .progress-percent { font-size: 1.7rem; font-weight: 900; color: var(--accent-green); display: block; }
+        .progress-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Info Items */
         .slide-info-item {
-            background: rgba(255,255,255,0.72); padding: 10px 13px; border-radius: 13px;
-            border: 1px solid rgba(255,255,255,0.9);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: all 0.25s ease;
+            background: rgba(255,255,255,0.7); padding: 11px 15px;
+            border-radius: 14px; border: 1px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: 0.25s;
         }
-        .slide-info-item:hover { background: white; transform: translateX(3px); }
-        .slide-info-label {
-            color: var(--text-muted); font-weight: 800; font-size: 0.68rem;
-            text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;
-        }
-        .slide-info-value { color: var(--text-primary); font-weight: 800; font-size: 0.88rem; }
+        .slide-info-item:hover { background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .slide-info-label { color: var(--text-muted); font-weight: 800; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+        .slide-info-value { color: var(--text-primary); font-weight: 800; font-size: 0.9rem; }
 
-        #slideTitleInfo {
-            color: var(--accent-green); font-size: 0.82rem; font-weight: 700;
-            line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        .slide-dots { display: flex; gap: 5px; flex-wrap: wrap; }
+        .slide-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: rgba(0,0,0,0.08); border: 1.5px solid rgba(255,255,255,0.6);
+            transition: all 0.3s ease; cursor: pointer;
         }
+        .slide-dot.done { background: var(--accent-green); border-color: transparent; }
+        .slide-dot.current {
+            background: var(--accent-cyan); border-color: transparent;
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.2);
+            transform: scale(1.3);
+        }
+        .slide-dot:hover { transform: scale(1.4); }
 
-        /* ======================= CENTER ======================= */
+        /* =================== CONTENT CENTER =================== */
         .center-wrapper {
             flex: 1; position: relative; display: flex;
             justify-content: center; align-items: center;
-            overflow: hidden; border-radius: var(--radius-lg);
+            overflow: hidden; border-radius: 24px; min-width: 0;
         }
         .glass-panel {
-            width: 100%; height: 100%; padding: 26px 44px;
+            width: 100%; height: 100%; padding: 28px 48px;
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             opacity: 0; visibility: hidden;
-            transform: scale(0.96) translateY(26px);
-            transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.5s;
+            transform: scale(0.97) translateY(18px);
+            transition: all 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex; flex-direction: column; overflow: hidden;
         }
         .glass-panel.active { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
+        .glass-panel.slide-out {
+            opacity: 0; transform: scale(0.95) translateY(-15px);
+            transition: all 0.3s ease-in;
+        }
         .slide-content-wrapper {
             flex: 1; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; width: 100%; height: 100%;
+            justify-content: center; align-items: center; width: 100%; min-height: 0;
         }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0)   scale(1); }
-        }
-        .active .anim-1 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.07s forwards; opacity: 0; }
-        .active .anim-2 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.17s forwards; opacity: 0; }
-        .active .anim-3 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.27s forwards; opacity: 0; }
-        .active .anim-4 { animation: fadeUp 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.37s forwards; opacity: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        .active .anim-1 { animation: fadeUp 0.55s 0.08s forwards; opacity: 0; }
+        .active .anim-2 { animation: fadeUp 0.55s 0.18s forwards; opacity: 0; }
+        .active .anim-3 { animation: fadeUp 0.55s 0.28s forwards; opacity: 0; }
+        .active .anim-4 { animation: fadeUp 0.55s 0.38s forwards; opacity: 0; }
 
-        /* ======================= TYPOGRAPHY ======================= */
-        h1 {
-            font-size: 2.75rem; font-weight: 900; text-align: center;
-            margin-bottom: 13px; letter-spacing: -0.6px; line-height: 1.2;
-            color: var(--text-primary);
-        }
-        h2 {
-            font-size: 1.72rem; font-weight: 800; text-align: center; margin-bottom: 20px;
-            color: var(--text-primary);
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            letter-spacing: -0.3px;
-        }
+        /* =================== TYPOGRAPHY =================== */
+        h1 { font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 12px; color: var(--text-primary); line-height: 1.1; }
+        h2 { font-size: 1.75rem; font-weight: 800; text-align: center; margin-bottom: 18px; color: var(--text-primary); display: flex; align-items: center; justify-content: center; gap: 12px; }
         .icon-grad {
             display: inline-flex; align-items: center; justify-content: center;
-            width: 48px; height: 48px; border-radius: 14px;
-            background: rgba(16,185,129,0.12); color: var(--accent-green); font-size: 1.2rem;
-            box-shadow: 0 4px 14px rgba(16,185,129,0.15), inset 0 1px 0 rgba(255,255,255,0.5);
+            width: 46px; height: 46px; border-radius: 13px;
+            background: rgba(16, 185, 129, 0.12); color: var(--accent-green); font-size: 1.25rem;
             flex-shrink: 0;
         }
-
         .intro-text {
-            text-align: center; max-width: 820px; margin: 0 auto 16px;
-            font-weight: 500; font-size: 1.04rem; line-height: 1.72;
-            color: var(--text-secondary);
+            text-align: center; max-width: 850px; margin: 0 auto 15px;
+            font-weight: 500; font-size: 1.05rem; line-height: 1.65; color: var(--text-secondary);
         }
 
-        /* Team badges */
-        .team-members { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-bottom: 16px; }
+        /* Member badges */
+        .team-members { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 18px; }
         .member-badge {
-            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
-            color: white; padding: 8px 20px; border-radius: 50px;
-            font-weight: 700; font-size: 0.88rem;
-            box-shadow: 0 5px 18px rgba(16,185,129,0.32), 0 2px 6px rgba(0,0,0,0.06);
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: default; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            color: white; padding: 8px 18px; border-radius: 50px;
+            font-weight: 700; font-size: 0.92rem;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.28);
+            display: flex; align-items: center; gap: 8px; transition: 0.3s; cursor: default;
         }
-        .member-badge::before {
-            content: ''; position: absolute; inset: 0; border-radius: 50px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 55%);
-            pointer-events: none;
-        }
-        .member-badge:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 30px rgba(16,185,129,0.45); }
+        .member-badge:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(16,185,129,0.4); }
 
         /* Steps */
-        .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; width: 100%; max-width: 940px; }
-        .steps-grid .step-item:last-child { grid-column: 1 / -1; width: 55%; margin: 0 auto; }
+        .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 1000px; }
+        .steps-grid .step-item:last-child { grid-column: 1 / -1; width: 60%; margin: 0 auto; }
         .step-item {
-            display: flex; gap: 13px; align-items: flex-start; padding: 15px 18px;
-            background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9);
-            border-left: 3px solid transparent;
-            border-radius: 15px; transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            display: flex; gap: 14px; align-items: flex-start;
+            padding: 16px 20px; background: rgba(255,255,255,0.7);
+            border: 1px solid white; border-radius: 16px; transition: 0.28s;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
         }
-        .step-item:hover {
-            background: white; border-left-color: var(--accent-green);
-            transform: translateX(5px); box-shadow: 0 8px 28px rgba(16,185,129,0.1);
-        }
+        .step-item:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(16,185,129,0.1); }
         .step-number {
-            width: 37px; height: 37px; border-radius: 11px; flex-shrink: 0;
-            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green-light));
+            width: 38px; height: 38px; border-radius: 11px; background: var(--accent-green);
             display: flex; align-items: center; justify-content: center;
-            font-weight: 900; font-size: 1rem; color: white;
-            box-shadow: 0 4px 12px rgba(16,185,129,0.32);
+            font-weight: 900; font-size: 1.05rem; color: white; flex-shrink: 0;
         }
-        .step-text { color: var(--text-secondary); font-size: 0.98rem; line-height: 1.55; padding-top: 5px; font-weight: 600; }
+        .step-text { color: var(--text-secondary); font-size: 1rem; line-height: 1.5; padding-top: 4px; font-weight: 600; }
 
         /* Video */
         .video-container {
-            width: 100%; max-width: 800px; height: 46vh; background: #070707;
-            border-radius: 16px; border: 3px solid rgba(255,255,255,0.88);
-            box-shadow: 0 22px 55px rgba(0,0,0,0.16), 0 8px 22px rgba(0,0,0,0.08);
+            width: 100%; max-width: 850px; height: 48vh; background: #0a0a0a;
+            border-radius: 18px; border: 4px solid white;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; position: relative;
         }
-        video { width: 100%; height: 100%; object-fit: contain; outline: none; transition: filter 1.3s ease, opacity 1.3s ease; }
-        .video-blurred { filter: blur(22px) brightness(0.65); opacity: 0.45; pointer-events: none; }
+        .video-container::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.3));
+            pointer-events: none; z-index: 1;
+        }
+        video {
+            width: 100%; height: 100%; object-fit: contain; outline: none;
+            transition: filter 0.8s ease, opacity 0.8s ease;
+        }
+        .video-blurred { filter: blur(18px) grayscale(25%); opacity: 0.55; pointer-events: none; }
+
+        /* Image */
+        .image-container {
+            width: 100%; max-width: 900px; height: 50vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .image-container img {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+            transition: transform 0.4s ease;
+        }
+        .image-container img:hover { transform: scale(1.01); }
         audio { display: none; }
 
         /* Table */
         table {
-            width: 100%; max-width: 900px; border-collapse: separate; border-spacing: 0;
-            border-radius: 15px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.9);
-            background: rgba(255,255,255,0.5);
-            box-shadow: 0 6px 26px rgba(0,0,0,0.04);
+            width: 100%; max-width: 960px; border-collapse: separate;
+            border-spacing: 0; border-radius: 16px; overflow: hidden;
+            border: 1px solid white; background: rgba(255,255,255,0.6);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.03);
         }
-        th, td { padding: 15px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        th:not(:last-child), td:not(:last-child) { border-right: 1px solid rgba(0,0,0,0.04); }
+        th, td { padding: 15px 18px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); border-right: 1px solid rgba(0,0,0,0.05); }
+        th:last-child, td:last-child { border-right: none; }
         tr:last-child td { border-bottom: none; }
-        th {
-            background: rgba(255,255,255,0.92); color: var(--text-primary);
-            font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
-            letter-spacing: 0.5px; border-bottom: 2px solid rgba(16,185,129,0.1);
-        }
-        td { color: var(--text-secondary); font-size: 0.96rem; font-weight: 600; transition: 0.25s; }
-        tr:nth-child(even) td { background: rgba(240,253,244,0.5); }
-        tr:hover td { background: rgba(255,255,255,0.95) !important; color: var(--text-primary); }
+        th { background: rgba(255,255,255,0.92); color: var(--text-primary); font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { color: var(--text-secondary); font-size: 0.98rem; font-weight: 600; transition: 0.25s; }
+        tr:hover td { background: white; color: var(--text-primary); }
 
         /* QA */
-        .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; width: 100%; max-width: 1100px; align-items: stretch; }
+        .qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; max-width: 1150px; align-items: stretch; }
         .qa-item {
-            background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9);
-            border-top: 4px solid var(--accent-green); border-radius: 17px;
-            padding: 18px 16px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex; flex-direction: column; gap: 9px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+            background: rgba(255,255,255,0.68); border: 1px solid white;
+            border-top: 4px solid var(--accent-green);
+            border-radius: 16px; padding: 18px; transition: 0.28s;
+            display: flex; flex-direction: column; gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
-        .qa-item:nth-child(2) { border-top-color: var(--accent-cyan); }
-        .qa-item:nth-child(2) .qa-question::before { background: var(--accent-cyan); }
-        .qa-item:nth-child(3) { border-top-color: var(--accent-yellow); }
-        .qa-item:nth-child(3) .qa-question::before { background: var(--accent-yellow); }
-        .qa-item:hover { background: white; transform: translateY(-6px); box-shadow: 0 18px 44px rgba(16,185,129,0.12); }
-        .qa-question {
-            font-weight: 800; color: var(--text-primary); font-size: 0.88rem;
-            line-height: 1.45; display: flex; flex-direction: column; gap: 8px;
-        }
+        .qa-item:hover { background: white; transform: translateY(-5px); box-shadow: 0 12px 28px rgba(16,185,129,0.1); }
+        .qa-question { font-weight: 800; color: var(--text-primary); font-size: 0.93rem; line-height: 1.4; display: flex; flex-direction: column; gap: 8px; }
         .qa-question::before {
             content: 'Câu hỏi'; display: inline-flex; width: max-content;
             background: var(--accent-green); color: white;
-            padding: 3px 10px; border-radius: 7px;
-            font-size: 0.68rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 4px 10px; border-radius: 7px; font-size: 0.72rem;
+            font-weight: 900; text-transform: uppercase;
         }
-        .qa-answer { color: var(--text-secondary); font-size: 0.89rem; line-height: 1.68; font-weight: 500; }
+        .qa-answer { color: var(--text-secondary); font-size: 0.93rem; line-height: 1.6; font-weight: 500; }
         .qa-answer b { color: var(--text-primary); font-weight: 800; }
 
-        /* End icon */
-        .end-icon {
-            font-size: 5.5rem; text-align: center; margin-bottom: 18px; display: block;
-            color: var(--accent-green);
-            filter: drop-shadow(0 10px 26px rgba(16,185,129,0.38));
-            animation: iconHover 2.2s ease-in-out infinite;
-        }
-        @keyframes iconHover {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50%       { transform: translateY(-10px) rotate(3deg); }
-        }
+        .end-icon { font-size: 5.5rem; text-align: center; margin-bottom: 18px; display: block; color: var(--accent-green); text-shadow: 0 10px 25px rgba(16,185,129,0.3); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
-        .footer-credit {
-            position: absolute; bottom: 14px; width: 100%; text-align: center;
-            font-size: 0.75rem; color: var(--text-muted); font-weight: 700;
-            letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55;
-        }
+        .footer-credit { position: absolute; bottom: 16px; width: 100%; text-align: center; font-size: 0.78rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
 
-        /* Ingredient tags */
-        .ingredient-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; margin-top: 8px; }
+        .ingredient-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
         .tag {
-            background: rgba(255,255,255,0.8); padding: 7px 18px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,0.92); font-weight: 700; font-size: 0.88rem;
-            display: flex; align-items: center; gap: 7px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            background: rgba(255,255,255,0.8); padding: 7px 16px;
+            border-radius: 50px; border: 1px solid white;
+            font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 7px; transition: 0.28s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
-        .tag:hover {
-            background: white; transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 8px 22px rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3);
-        }
+        .tag:hover { background: white; border-color: var(--accent-green); transform: translateY(-3px); box-shadow: 0 6px 16px rgba(16,185,129,0.1); }
         .tag-green i { color: #10b981; } .tag-orange i { color: #f59e0b; }
-        .tag-blue i  { color: #0ea5e9; } .tag-yellow i { color: #eab308; }
+        .tag-blue i { color: #0ea5e9; } .tag-yellow i { color: #eab308; }
 
-        /* ======================= CONTROLS ======================= */
+        /* =================== CONTROLS BAR =================== */
         .controls {
-            position: fixed; bottom: 20px; right: 22px;
-            display: flex; align-items: center; gap: 7px; z-index: 200;
-            padding: 9px 18px; border-radius: 50px;
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
-            border: 1px solid rgba(255,255,255,0.96);
-            box-shadow: 0 14px 45px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.85);
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 10px;
+            z-index: 200; padding: 10px 22px; border-radius: 50px;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.95);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.04);
         }
+        .ctrl-divider { width: 1px; height: 22px; background: rgba(0,0,0,0.09); border-radius: 2px; }
         .btn {
             background: transparent; border: none; color: var(--text-secondary);
-            font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; font-size: 0.86rem;
+            font-family: 'Be Vietnam Pro', sans-serif; font-weight: 800; font-size: 0.88rem;
             cursor: pointer; display: flex; align-items: center; gap: 7px;
-            padding: 7px 13px; border-radius: 11px; transition: all 0.25s ease; white-space: nowrap;
+            padding: 7px 13px; border-radius: 12px; transition: 0.22s;
         }
-        .btn:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); transform: translateY(-1px); }
-        .btn:active { transform: scale(0.96); }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-green-dark), var(--accent-green));
-            color: white !important; padding: 8px 22px; border-radius: 26px;
-            box-shadow: 0 5px 16px rgba(16,185,129,0.38);
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--accent-green), var(--accent-green-light));
-            box-shadow: 0 10px 28px rgba(16,185,129,0.5); transform: translateY(-2px) scale(1.03);
-        }
-        .ctrl-divider { width: 1px; height: 20px; background: rgba(0,0,0,0.08); }
-        .timer-bar { width: 96px; height: 6px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; }
-        .timer-fill {
-            height: 100%; width: 100%; border-radius: 10px;
-            background: linear-gradient(90deg, var(--accent-green-dark), var(--accent-green), var(--accent-green-light));
-            transform-origin: left; transition: transform 0.1s linear;
-        }
-        .time-text { font-size: 0.84rem; font-weight: 900; color: var(--accent-green); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+        .btn:hover { background: rgba(0,0,0,0.04); color: var(--text-primary); transform: translateY(-1px); }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-green), #059669); color: white !important; padding: 9px 22px; border-radius: 30px; }
+        .btn-primary:hover { background: linear-gradient(135deg, #059669, #047857); box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35); transform: translateY(-2px); }
+        .btn-danger { color: #ef4444 !important; }
+        .btn-danger:hover { background: rgba(239,68,68,0.08) !important; }
 
-        /* Slide counter */
+        .timer-bar { width: 110px; height: 6px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; }
+        .timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); transform-origin: left; transition: transform 0.1s linear; border-radius: 10px; }
+        .time-text { font-size: 0.85rem; font-weight: 800; color: var(--accent-green); min-width: 42px; text-align: right; }
+
+        /* Slide counter - left bottom */
         .slide-counter {
-            position: fixed; bottom: 24px; left: 22px; font-size: 0.84rem; font-weight: 800;
-            color: var(--text-secondary); z-index: 200;
-            padding: 7px 16px; border-radius: 50px;
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255,255,255,0.96);
-            box-shadow: 0 6px 22px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85);
-            display: flex; align-items: center; gap: 7px;
+            position: fixed; bottom: 24px; left: 24px;
+            font-size: 0.85rem; font-weight: 800; color: var(--text-secondary);
+            z-index: 200; padding: 7px 16px; border-radius: 14px;
+            background: rgba(255,255,255,0.88); backdrop-filter: blur(12px);
+            border: 1px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 6px;
         }
 
-        /* ======================= MODALS ======================= */
+        /* Keyboard hint */
+        .kbd-hint {
+            position: fixed; bottom: 24px; right: 24px;
+            font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+            z-index: 200; padding: 6px 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.75); backdrop-filter: blur(10px);
+            border: 1px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .kbd { background: white; border: 1px solid rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 5px; font-size: 0.7rem; }
+
+        /* =================== MODALS =================== */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(236,253,245,0.45);
-            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            position: fixed; inset: 0; background: rgba(240,253,250,0.5);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             z-index: 9000; display: flex; justify-content: center; align-items: center;
-            opacity: 0; visibility: hidden; transition: all 0.35s ease;
+            opacity: 0; visibility: hidden; transition: 0.3s;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content {
-            width: 90%; max-width: 830px; max-height: 85vh; padding: 30px;
-            overflow-y: auto;
-            transform: scale(0.9) translateY(22px);
-            transition: all 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.98);
-            box-shadow: 0 35px 90px rgba(0,0,0,0.13), 0 12px 35px rgba(0,0,0,0.06);
-            border-radius: 26px;
+            width: 92%; max-width: 860px; max-height: 86vh;
+            padding: 32px; overflow-y: auto;
+            transform: scale(0.92) translateY(10px); transition: 0.3s;
+            background: rgba(255,255,255,0.96);
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+            border-radius: 28px;
         }
-        .modal-content::-webkit-scrollbar { width: 5px; }
-        .modal-content::-webkit-scrollbar-track { background: transparent; }
-        .modal-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 5px; }
         .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: transparent; }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
         .modal-header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 22px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 14px;
+            margin-bottom: 22px; border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: 14px;
         }
-        .modal-title { font-size: 1.38rem; font-weight: 900; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .modal-title { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
         .modal-title i { color: var(--accent-cyan); }
         .close-btn {
-            background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07);
-            width: 37px; height: 37px; border-radius: 10px; font-size: 1.05rem;
-            color: var(--text-muted); cursor: pointer; transition: all 0.25s ease;
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.04); border: none; width: 38px; height: 38px;
+            border-radius: 10px; font-size: 1.1rem; color: var(--text-secondary);
+            cursor: pointer; transition: 0.22s; display: flex; align-items: center; justify-content: center;
         }
-        .close-btn:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.18); color: #ef4444; transform: scale(1.07); }
+        .close-btn:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; transform: scale(1.05); }
 
-        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 11px; }
+        /* Overview Grid */
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
         .overview-item {
-            background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.9);
-            border-radius: 15px; padding: 22px 15px; text-align: center;
-            cursor: pointer; transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: rgba(255,255,255,0.5); border: 1.5px solid white;
+            border-radius: 16px; padding: 22px 18px; text-align: center;
+            cursor: pointer; transition: 0.28s;
             display: flex; flex-direction: column; gap: 10px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            position: relative; overflow: hidden;
         }
-        .overview-item:hover {
-            background: white; border-color: var(--accent-cyan);
-            transform: translateY(-6px) scale(1.03); box-shadow: 0 18px 40px rgba(14,165,233,0.15);
+        .overview-item::before {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 3px; background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan));
+            transform: scaleX(0); transition: 0.28s; transform-origin: left;
         }
-        .overview-number {
-            font-size: 2.1rem; font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-cyan), #818cf8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        .overview-item:hover { background: white; border-color: rgba(14,165,233,0.3); transform: translateY(-5px); box-shadow: 0 12px 25px rgba(14,165,233,0.1); }
+        .overview-item:hover::before { transform: scaleX(1); }
+        .overview-item.current-slide { border-color: var(--accent-cyan); background: rgba(14,165,233,0.06); }
+        .overview-item.current-slide::before { transform: scaleX(1); }
+        .overview-number { font-size: 1.9rem; font-weight: 900; color: var(--accent-cyan); }
+        .overview-title-text { font-weight: 700; color: var(--text-primary); font-size: 0.95rem; }
+        .overview-badge-current {
+            font-size: 0.7rem; font-weight: 800; color: var(--accent-cyan);
+            background: rgba(14,165,233,0.1); padding: 3px 8px;
+            border-radius: 50px; display: none;
         }
-        .overview-title-text { font-weight: 700; color: var(--text-primary); font-size: 0.93rem; line-height: 1.4; }
+        .overview-item.current-slide .overview-badge-current { display: inline-block; }
 
-        .settings-group { margin-bottom: 16px; }
-        .settings-group label {
-            display: block; font-weight: 700; font-size: 0.88rem;
-            color: var(--text-secondary); margin-bottom: 7px; letter-spacing: 0.1px;
+        /* =================== VOLUME CONTROL =================== */
+        .volume-btn { position: relative; }
+        .volume-slider-wrap {
+            position: absolute; bottom: calc(100% + 10px); left: 50%;
+            transform: translateX(-50%) scaleY(0);
+            transform-origin: bottom;
+            background: white; border-radius: 12px; padding: 10px 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05);
+            transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            z-index: 10;
         }
-        .settings-group input {
-            width: 100%; padding: 12px 15px; border-radius: 11px;
-            border: 1.5px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.9);
-            color: var(--text-primary); font-family: 'Be Vietnam Pro', sans-serif;
-            font-size: 0.93rem; outline: none; transition: all 0.25s ease;
+        .volume-btn:hover .volume-slider-wrap { transform: translateX(-50%) scaleY(1); }
+        .volume-slider {
+            -webkit-appearance: none; width: 80px; height: 4px;
+            background: rgba(0,0,0,0.1); border-radius: 10px; outline: none;
+            writing-mode: vertical-lr; direction: rtl; /* vertical slider */
+            width: 4px; height: 80px;
         }
-        .settings-group input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 4px rgba(14,165,233,0.12); background: white; }
-
-        /* ======================= TOAST ======================= */
-        #toast-container {
-            position: fixed; top: 76px; right: 18px; z-index: 99999;
-            display: flex; flex-direction: column; gap: 9px; pointer-events: none;
-        }
-        .toast {
-            background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.98);
-            border-left: 4px solid var(--accent-green); border-radius: 14px;
-            padding: 13px 18px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.1), 0 4px 14px rgba(0,0,0,0.05);
-            display: flex; align-items: center; gap: 11px;
-            font-weight: 700; color: var(--text-primary); font-size: 0.88rem;
-            transform: translateX(130%); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: auto; min-width: 250px; backdrop-filter: blur(20px);
-        }
-        .toast.show { transform: translateX(0); }
-        .toast.hide { transform: translateX(140%); opacity: 0; transition: all 0.4s ease; }
-        .toast-icon { font-size: 1.05rem; flex-shrink: 0; }
-
-        /* ======================= CURSOR GLOW ======================= */
-        .cursor-glow {
-            position: fixed; width: 360px; height: 360px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(16,185,129,0.055) 0%, transparent 68%);
-            pointer-events: none; z-index: 2; transform: translate(-50%, -50%);
-            transition: left 0.12s ease, top 0.12s ease;
-            will-change: left, top;
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 14px; height: 14px;
+            border-radius: 50%; background: var(--accent-green);
+            cursor: pointer; box-shadow: 0 2px 6px rgba(16,185,129,0.4);
         }
 
-        /* Gradient text utility */
-        .text-gradient-green {
-            background: linear-gradient(135deg, #064e3b, var(--accent-green), #0369a1);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        /* Status dot */
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent-green);
+            animation: statusPulse 2s infinite;
+            display: inline-block; flex-shrink: 0;
+        }
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Cursor glow -->
-    <div class="cursor-glow" id="cursorGlow"></div>
-
-    <!-- Toast container -->
-    <div id="toast-container"></div>
-
+    <!-- Background Decor -->
     <div class="circle-decor circle-1"></div>
     <div class="circle-decor circle-2"></div>
     <div class="circle-decor circle-3"></div>
-    <div class="circle-decor circle-4"></div>
 
+    <!-- =================== START SCREEN =================== -->
     <div id="startScreen">
-        <div class="start-card">
-            <div class="logo-ring">
-                <div class="ring-spinner"></div>
+        <div class="start-orb start-orb-1"></div>
+        <div class="start-orb start-orb-2"></div>
+        <div class="start-orb start-orb-3"></div>
+        <div class="start-content">
+            <div class="start-logo-wrap">
+                <div class="start-logo-ring"></div>
                 <img src="https://files.catbox.moe/61dbof.jpg" alt="Logo">
             </div>
+            <span class="start-badge">🔬 Sinh Học Thực Hành · Nhóm 5</span>
             <h1>Thí Nghiệm Lên Men Dưa Chua</h1>
-            <p>Báo cáo thực hành môn Sinh Học<br><b>Nhấn Bắt Đầu</b> để hệ thống tự động chạy trình chiếu kết hợp giọng đọc thuyết minh và video mô phỏng.</p>
-            <button id="startBtn" class="pulse-btn" onclick="startPresentation()">Bắt Đầu Trình Chiếu &nbsp;<i class="fas fa-play"></i></button>
+            <h2>Báo Cáo Thực Hành – Nhóm 5</h2>
+            <div class="start-divider"></div>
+            <button id="startBtn" class="btn-start-premium" onclick="startPresentation()">
+                <i class="fas fa-play-circle btn-icon"></i> BẮT ĐẦU TRÌNH CHIẾU
+            </button>
         </div>
     </div>
 
-    <!-- Modal Tổng Quan -->
+    <!-- =================== OVERVIEW MODAL =================== -->
     <div class="modal-overlay" id="overviewModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-layer-group"></i> Tổng Quan Slides</div>
+                <div class="modal-title"><i class="fas fa-border-all"></i> Tổng Quan Slides</div>
                 <button class="close-btn" onclick="closeModal('overviewModal')"><i class="fas fa-xmark"></i></button>
             </div>
             <div class="overview-grid" id="overviewGrid"></div>
         </div>
     </div>
 
-    <!-- Modal Cài Đặt -->
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal-content" style="max-width: 580px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-gear"></i> Cài Đặt Nguồn Video</div>
-                <button class="close-btn" onclick="closeModal('settingsModal')"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div class="settings-body">
-                <div class="settings-group">
-                    <label><i class="fas fa-film" style="color:var(--accent-cyan);margin-right:6px;"></i>Link Video Thực Hành (Slide 3):</label>
-                    <input type="text" id="inputVid1" value="https://files.catbox.moe/i6nhjk.mp4">
-                </div>
-                <div class="settings-group">
-                    <label><i class="fas fa-music" style="color:var(--accent-green);margin-right:6px;"></i>Link Nhạc/Âm thanh (Slide 3):</label>
-                    <input type="text" id="inputAud1" value="https://files.catbox.moe/jhi1g7.mp3">
-                </div>
-                <div class="settings-group">
-                    <label><i class="fas fa-film" style="color:var(--accent-yellow);margin-right:6px;"></i>Link Video Đánh Giá (Slide 5):</label>
-                    <input type="text" id="inputVid2" value="https://files.catbox.moe/91hic7.mp4">
-                </div>
-                <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:10px;font-size:1rem;padding:13px;" onclick="saveSettings()">
-                    <i class="fas fa-check"></i>&nbsp; Cập Nhật
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navbar -->
+    <!-- =================== NAVBAR =================== -->
     <div class="navbar glass-box">
-        <div class="logo"><img src="https://files.catbox.moe/61dbof.jpg" alt="Logo"> NHÓM 5</div>
-        <div class="nav-separator"></div>
+        <div class="logo">
+            <img src="https://files.catbox.moe/61dbof.jpg" alt="Logo"> NHÓM 5
+        </div>
         <div class="nav-tabs">
-            <button class="nav-tab active" onclick="activateTab(this); closeModal('overviewModal'); closeModal('settingsModal');"><i class="fas fa-desktop"></i> Thuyết Trình</button>
-            <button class="nav-tab" onclick="activateTab(this); openModal('overviewModal');"><i class="fas fa-border-all"></i> Tổng Quan</button>
-            <button class="nav-tab" onclick="activateTab(this); openModal('settingsModal');"><i class="fas fa-sliders"></i> Cài Đặt</button>
+            <button class="nav-tab active" onclick="activateTab(this); closeModal('overviewModal');">
+                <i class="fas fa-desktop"></i> Thuyết Trình
+            </button>
+            <button class="nav-tab" onclick="activateTab(this); openModal('overviewModal');">
+                <i class="fas fa-border-all"></i> Tổng Quan
+            </button>
         </div>
         <div class="nav-right">
-            <button class="nav-icon-btn" title="Toàn màn hình" onclick="toggleFullScreen()"><i class="fas fa-expand"></i></button>
+            <button class="nav-icon-btn" data-tooltip="Toàn màn hình" onclick="toggleFullScreen()">
+                <i class="fas fa-expand" id="fsIcon"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- =================== MAIN CONTAINER =================== -->
     <div class="main-container">
+
+        <!-- Sidebar -->
         <div class="sidebar glass-box">
+            <!-- Progress -->
             <div class="dashboard-section">
                 <div class="dashboard-title">Tiến Độ</div>
                 <svg class="progress-ring" viewBox="0 0 140 140">
                     <defs>
                         <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#059669"/>
-                            <stop offset="100%" style="stop-color:#34d399"/>
+                            <stop offset="0%" style="stop-color:#10b981"/>
+                            <stop offset="100%" style="stop-color:#0ea5e9"/>
                         </linearGradient>
                     </defs>
                     <circle cx="70" cy="70" r="60" class="progress-circle"></circle>
-                    <circle cx="70" cy="70" r="60" class="progress-circle-fill" id="progressFill"></circle>
+                    <circle cx="70" cy="70" r="60" class="progress-circle-fill" id="progressFill" stroke-dasharray="0 376"></circle>
                 </svg>
                 <div class="progress-text">
-                    <span class="progress-percent" id="progressPercent">0%</span>Hoàn thành
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                    <span class="progress-label">Hoàn thành</span>
                 </div>
             </div>
 
+            <!-- Slide dots -->
+            <div class="dashboard-section">
+                <div class="dashboard-title">Slide</div>
+                <div class="slide-dots" id="slideDots"></div>
+            </div>
+
+            <!-- Status -->
             <div class="dashboard-section">
                 <div class="dashboard-title">Trạng Thái</div>
                 <div class="slide-info-item">
-                    <div class="slide-info-label">Slide</div>
+                    <div class="slide-info-label">Đang chiếu</div>
                     <div class="slide-info-value" id="slideNumber">1 / 8</div>
                 </div>
-                <div class="slide-info-item" style="border-left: 3px solid var(--accent-green);">
-                    <div class="slide-info-label">Nội dung</div>
-                    <div id="slideTitleInfo">Đang tải...</div>
-                </div>
-                <div class="slide-info-item" style="background:rgba(14,165,233,0.08);border-color:rgba(14,165,233,0.22);">
-                    <div class="slide-info-label" style="color:var(--accent-cyan);">Hoạt động</div>
-                    <div class="slide-info-value" id="slideStatus">Đang nạp...</div>
+                <div class="slide-info-item" style="background: rgba(14,165,233,0.07); border-color: rgba(14,165,233,0.15);">
+                    <div class="slide-info-label" style="color: var(--accent-cyan);">Hoạt động</div>
+                    <div class="slide-info-value" id="slideStatus" style="display:flex; align-items:center; gap:6px;">
+                        <span class="status-dot"></span> Đang nạp...
+                    </div>
                 </div>
             </div>
 
+            <!-- Credit -->
             <div class="dashboard-section" style="margin-top: auto;">
                 <div class="dashboard-title">Thực Hiện Bởi</div>
-                <div class="slide-info-item" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.22);text-align:center;">
-                    <div class="slide-info-value" style="color:var(--accent-green);font-size:1.05rem;letter-spacing:2px;display:flex;align-items:center;justify-content:center;gap:7px;">
+                <div class="slide-info-item" style="background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.18);">
+                    <div class="slide-info-value" style="color: var(--accent-green); text-align: center; font-size: 1.1rem; letter-spacing: 2px;">
                         <i class="fas fa-users"></i> NHÓM 5
                     </div>
-                    <div style="font-size:0.7rem;color:var(--text-muted);font-weight:700;margin-top:4px;letter-spacing:0.5px;">Sinh Học — K24</div>
                 </div>
             </div>
         </div>
 
-        <div class="center-wrapper">
+        <!-- Center Content -->
+        <div class="center-wrapper glass-box">
 
             <!-- Slide 1 -->
             <div class="slide glass-panel active">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298343020-77c1cbf9-5314-4391-a52c-1e0509b24b34.mp3"></audio>
                 <div class="slide-content-wrapper">
                     <h1 class="anim-1">
-                        <span class="icon-grad" style="margin:0 auto 14px;width:70px;height:70px;border-radius:22px;font-size:2.1rem;background:linear-gradient(135deg,var(--accent-green-dark),var(--accent-green));color:white;box-shadow:0 8px 24px rgba(16,185,129,0.38);"><i class="fas fa-flask-vial"></i></span>
-                        <br>Báo Cáo Thực Hành Sinh Học
+                        <span class="icon-grad" style="margin: 0 auto 10px; width:68px; height:68px; border-radius:22px; font-size:2rem; background: var(--accent-green); color: white;"><i class="fas fa-flask-vial"></i></span><br>
+                        Báo Cáo Thực Hành Sinh Học
                     </h1>
-                    <h2 class="anim-2" style="font-size:1.55rem;color:var(--accent-cyan);margin-bottom:12px;">Dự Án: Thí Nghiệm Lên Men Dưa Chua</h2>
+                    <h2 class="anim-2" style="font-size:1.6rem; color: var(--accent-cyan); margin-bottom: 10px;">Dự Án: Thí Nghiệm Lên Men Dưa Chua</h2>
                     <p class="anim-3 intro-text">Lên men lactic là một quá trình sinh học thú vị, giúp bảo quản rau củ lâu dài và tạo ra món ăn giàu men vi sinh tự nhiên, rất có lợi cho hệ tiêu hóa của con người.</p>
                     <div class="team-members anim-3">
                         <div class="member-badge"><i class="fas fa-user-graduate"></i> Lưu Phú Gia Bảo</div>
@@ -764,7 +682,7 @@
                         <div class="member-badge"><i class="fas fa-user-graduate"></i> Vũ Anh Khoa</div>
                     </div>
                     <div class="ingredient-tags anim-4">
-                        <div class="tag tag-green" style="border-color:rgba(16,185,129,0.3);"><i class="fas fa-leaf"></i> Bắp cải (Chính)</div>
+                        <div class="tag tag-green" style="border-color: var(--accent-green);"><i class="fas fa-leaf"></i> Bắp cải (Chính)</div>
                         <div class="tag tag-orange"><i class="fas fa-carrot"></i> Cà rốt (Bổ sung)</div>
                         <div class="tag tag-blue"><i class="fas fa-cubes"></i> Muối hạt</div>
                         <div class="tag tag-yellow"><i class="fas fa-cube"></i> Đường trắng</div>
@@ -778,10 +696,7 @@
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298414552-2543f253-fc3d-4af2-9106-3058ecb6916a.mp3"></audio>
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1">
-                        <span class="icon-grad" style="background:rgba(14,165,233,0.12);color:var(--accent-cyan);box-shadow:0 4px 14px rgba(14,165,233,0.2);"><i class="fas fa-list-ol"></i></span>
-                        Quy Trình Thực Hiện
-                    </h2>
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-list-ol"></i></span> Quy Trình Thực Hiện</h2>
                     <div class="steps-grid">
                         <div class="step-item anim-2"><div class="step-number">1</div><div class="step-text">Rửa sạch bắp cải và một ít cà rốt, phơi héo để giảm lượng nước giúp dưa giòn.</div></div>
                         <div class="step-item anim-2"><div class="step-number">2</div><div class="step-text">Cắt bắp cải thành khúc (0,5–0,8cm), cà rốt bào sợi để bổ sung màu sắc.</div></div>
@@ -793,17 +708,18 @@
                 <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
             </div>
 
-            <!-- Slide 3 (Video 1) -->
+            <!-- Slide 3 – Video -->
             <div class="slide glass-panel" data-type="video">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298449511-233b2a2f-769a-420f-8823-510e2740ddfe.mp3"></audio>
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1">
-                        <span class="icon-grad" style="background:rgba(239,68,68,0.1);color:var(--accent-red);box-shadow:0 4px 14px rgba(239,68,68,0.15);"><i class="fas fa-video"></i></span>
-                        Video Thực Hành
-                    </h2>
+                    <h2 class="anim-1"><span class="icon-grad"><i class="fas fa-video"></i></span> Video Thực Hành</h2>
                     <div class="video-container anim-2">
-                        <video id="vid1" controls muted playsinline><source src="https://files.catbox.moe/i6nhjk.mp4" type="video/mp4"></video>
-                        <audio id="aud1" class="bg-music"><source src="https://files.catbox.moe/jhi1g7.mp3" type="audio/mpeg"></audio>
+                        <video id="vid1" controls muted playsinline>
+                            <source src="https://files.catbox.moe/i6nhjk.mp4" type="video/mp4">
+                        </video>
+                        <audio id="aud1" class="bg-music">
+                            <source src="https://files.catbox.moe/jhi1g7.mp3" type="audio/mpeg">
+                        </audio>
                     </div>
                 </div>
                 <div class="footer-credit anim-3">Bản quyền by Gia Bảo K24</div>
@@ -814,24 +730,21 @@
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298467888-8b99876f-f71e-47b4-acdd-7ec42e0b5034.mp3"></audio>
                 <div class="slide-content-wrapper">
                     <i class="fas fa-award end-icon anim-1"></i>
-                    <h1 class="anim-2 text-gradient-green" style="font-size:3.2rem;">THÀNH QUẢ SAU 2 NGÀY</h1>
-                    <p class="anim-3" style="font-size:1.2rem;color:var(--text-secondary);line-height:1.85;max-width:800px;text-align:center;margin-top:18px;font-weight:600;">
+                    <h1 class="anim-2" style="font-size: 3.3rem;">THÀNH QUẢ SAU 2 NGÀY</h1>
+                    <p class="anim-3" style="font-size: 1.2rem; color: var(--text-secondary); line-height: 1.8; max-width: 800px; text-align: center; margin-top: 15px; font-weight: 600;">
                         Sản phẩm đã chuyển sang màu vàng đặc trưng của dưa chín, cấu trúc rau vẫn giữ được độ giòn, nước ngâm có hiện tượng đục nhẹ do sự phát triển của vi sinh vật.
                     </p>
                 </div>
                 <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
             </div>
 
-            <!-- Slide 5 (Video 2) -->
-            <div class="slide glass-panel" data-type="video">
-                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298492260-381fb9c8-115a-4d06-bff8-1c67aa17a83a.mp3"></audio>
+            <!-- Slide 5 -->
+            <div class="slide glass-panel">
+                <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777357399414-84b32251-4ac9-45a7-87b4-62b90a95a1a9.mp3"></audio>
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1">
-                        <span class="icon-grad" style="background:rgba(245,158,11,0.12);color:var(--accent-yellow);box-shadow:0 4px 14px rgba(245,158,11,0.2);"><i class="fas fa-microscope"></i></span>
-                        Đánh Giá Cảm Quan
-                    </h2>
-                    <div class="video-container anim-2">
-                        <video id="vid2" controls playsinline><source src="https://files.catbox.moe/91hic7.mp4" type="video/mp4"></video>
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(245,158,11,0.1); color: var(--accent-yellow);"><i class="fas fa-search-plus"></i></span> Đánh Giá Tổng Quan</h2>
+                    <div class="image-container anim-2">
+                        <img src="https://files.catbox.moe/oh25dm.jpg" alt="Đánh giá dưa chua">
                     </div>
                 </div>
                 <div class="footer-credit anim-3">Bản quyền by Gia Bảo K24</div>
@@ -841,16 +754,15 @@
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298530172-6e45ec93-5749-4d0d-90ee-7ffbc1b2931e.mp3"></audio>
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1">
-                        <span class="icon-grad" style="background:rgba(14,165,233,0.12);color:var(--accent-cyan);box-shadow:0 4px 14px rgba(14,165,233,0.2);"><i class="fas fa-table-list"></i></span>
-                        Bảng So Sánh Kết Quả
-                    </h2>
-                    <div class="anim-2" style="width:100%;display:flex;justify-content:center;">
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(14,165,233,0.1); color: var(--accent-cyan);"><i class="fas fa-table-list"></i></span> Bảng So Sánh Kết Quả</h2>
+                    <div class="anim-2" style="width: 100%; display: flex; justify-content: center;">
                         <table>
-                            <thead><tr><th>Thời điểm</th><th>Màu sắc</th><th>Mùi, vị</th><th>Trạng thái</th><th>Độ pH (ước tính)</th></tr></thead>
+                            <thead>
+                                <tr><th>Thời điểm</th><th>Màu sắc</th><th>Mùi, vị</th><th>Trạng thái</th><th>Độ pH (ước tính)</th></tr>
+                            </thead>
                             <tbody>
-                                <tr><td><b>Ban đầu (Mới trộn)</b></td><td>Xanh lá, trắng sáng</td><td>Hăng của rau sống, mặn</td><td>Cứng, giòn</td><td style="color:var(--accent-cyan);font-weight:800;">~ 6.0 – 7.0</td></tr>
-                                <tr><td><b>Sau 2 ngày ủ</b></td><td>Chuyển vàng đặc trưng</td><td>Vị chua dịu</td><td>Mềm hơn, giữ độ giòn</td><td style="color:var(--accent-green);font-weight:800;">~ 3.0 – 4.0</td></tr>
+                                <tr><td><b>Ban đầu (Mới trộn)</b></td><td>Xanh lá, trắng sáng</td><td>Hăng của rau sống, mặn</td><td>Cứng, giòn</td><td style="color: var(--accent-cyan); font-weight: 800;">~ 6.0 – 7.0</td></tr>
+                                <tr><td><b>Sau 2 ngày ủ</b></td><td>Chuyển vàng đặc trưng</td><td>Vị chua dịu</td><td>Mềm hơn, giữ độ giòn</td><td style="color: var(--accent-green); font-weight: 800;">~ 3.0 – 4.0</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -862,10 +774,7 @@
             <div class="slide glass-panel">
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298554313-ca323719-0b36-4b38-b591-9ad9afcc076c.mp3"></audio>
                 <div class="slide-content-wrapper">
-                    <h2 class="anim-1">
-                        <span class="icon-grad" style="background:rgba(239,68,68,0.1);color:var(--accent-red);box-shadow:0 4px 14px rgba(239,68,68,0.15);"><i class="fas fa-comments"></i></span>
-                        Trả Lời Thảo Luận
-                    </h2>
+                    <h2 class="anim-1"><span class="icon-grad" style="background: rgba(239,68,68,0.1); color: #ef4444;"><i class="fas fa-comments"></i></span> Trả Lời Thảo Luận</h2>
                     <div class="qa-grid">
                         <div class="qa-item anim-2">
                             <div class="qa-question">Vi khuẩn lên men dưa chua có từ những nguồn nào? Cách chủ động bổ sung?</div>
@@ -889,108 +798,147 @@
                 <audio class="voiceover" src="https://www.image2url.com/r2/default/audio/1777298575698-7739e396-27a3-4511-ad1d-c824f1a547c4.mp3"></audio>
                 <div class="slide-content-wrapper">
                     <i class="fas fa-check-circle end-icon anim-1"></i>
-                    <h1 class="anim-2 text-gradient-green" style="font-size:3rem;">Hoàn Thành Bài Thí Nghiệm!</h1>
-                    <p class="anim-3" style="font-size:1.15rem;color:var(--text-secondary);margin-top:18px;font-weight:600;">Cảm ơn thầy cô và các bạn đã chú ý lắng nghe! 🎉</p>
+                    <h1 class="anim-2" style="font-size: 2.9rem;">Hoàn Thành Bài Thí Nghiệm!</h1>
+                    <p class="anim-3" style="font-size: 1.15rem; color: var(--text-secondary); margin-top: 15px; font-weight: 600; text-align: center;">
+                        Cảm ơn thầy cô và các bạn đã chú ý lắng nghe! 🎉
+                    </p>
                 </div>
-                <div class="footer-credit anim-4">Cre by Gia Bảo K24</div>
+                <div class="footer-credit anim-4">Bản quyền by Gia Bảo K24</div>
             </div>
 
-        </div>
-    </div>
+        </div><!-- end center-wrapper -->
+    </div><!-- end main-container -->
 
-    <!-- Controls -->
+    <!-- =================== CONTROLS BAR =================== -->
     <div class="controls" id="controlBar">
-        <button class="btn" onclick="forcePrevSlide()"><i class="fas fa-chevron-left"></i> Quay Lại</button>
+        <button class="btn" onclick="forcePrevSlide()" title="Quay lại (←)">
+            <i class="fas fa-chevron-left"></i> Quay Lại
+        </button>
         <div class="ctrl-divider"></div>
-        <button class="btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-pause"></i> Tạm Dừng</button>
+        <button class="btn" id="playPauseBtn" onclick="togglePlayPause()">
+            <i class="fas fa-pause"></i> Tạm Dừng
+        </button>
         <div class="ctrl-divider"></div>
-        <div class="timer-bar"><div id="timerFill" class="timer-fill"></div></div>
+        <div class="timer-bar"><div id="timerFill" class="timer-fill" style="transform:scaleX(0)"></div></div>
         <div id="timeText" class="time-text">--</div>
         <div class="ctrl-divider"></div>
-        <button class="btn btn-primary" onclick="forceNextSlide()">Tiếp Theo <i class="fas fa-chevron-right"></i></button>
+        <button class="btn btn-primary" onclick="forceNextSlide()" title="Tiếp theo (→)">
+            Tiếp Theo <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 
-    <div class="slide-counter"><i class="fas fa-layer-group" style="color:var(--accent-cyan);"></i> <span id="slideCounter">1</span> / 8</div>
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <i class="fas fa-layer-group" style="color: var(--accent-cyan);"></i>
+        <span id="slideCounter">1</span> / 8
+    </div>
+
+    <!-- Keyboard hint -->
+    <div class="kbd-hint">
+        <span class="kbd">←</span><span class="kbd">→</span> chuyển &nbsp;
+        <span class="kbd">Space</span> tạm dừng
+    </div>
 
     <script>
+        // ============================================================
+        //  STATE
+        // ============================================================
         const slides = document.querySelectorAll('.slide');
         let currentSlide = 0;
         let isPaused = false;
-        let timerInterval;
+        let timerInterval = null;
         let timeLeft = 0;
         const WAIT_TIME = 3000;
 
-        const slideTitles = ['Giới Thiệu', 'Các Bước Tiến Hành', 'Video Thực Hành', 'Thành Quả', 'Đánh Giá Cảm Quan', 'Bảng So Sánh', 'Thảo Luận', 'Kết Thúc'];
+        // Modal pause state – saves whether media were actually playing
+        let modalState = {
+            voiceWasPlaying: false,
+            vidWasPlaying: false,
+            musicWasPlaying: false,
+            timerWasRunning: false,
+            savedTimeLeft: 0
+        };
 
-        // ===== TOAST =====
-        function showToast(message, icon = 'fa-check-circle', color = 'var(--accent-green)') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeftColor = color;
-            toast.innerHTML = `<i class="fas ${icon} toast-icon" style="color:${color}"></i> ${message}`;
-            container.appendChild(toast);
-            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
-            setTimeout(() => {
-                toast.classList.remove('show');
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 420);
-            }, 3000);
-        }
-
-        // ===== CURSOR GLOW =====
-        const cursorGlow = document.getElementById('cursorGlow');
-        document.addEventListener('mousemove', e => {
-            cursorGlow.style.left = e.clientX + 'px';
-            cursorGlow.style.top  = e.clientY + 'px';
-        });
-
-        // ===== PARTICLES =====
-        (function createParticles() {
-            const screen = document.getElementById('startScreen');
-            const colors = [
-                'rgba(16,185,129,0.18)', 'rgba(14,165,233,0.14)',
-                'rgba(245,158,11,0.12)', 'rgba(167,243,208,0.22)',
-                'rgba(186,230,253,0.18)'
-            ];
-            for (let i = 0; i < 20; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const size = Math.random() * 22 + 7;
-                p.style.cssText = `
-                    width:${size}px;height:${size}px;
-                    left:${Math.random() * 100}%;
-                    background:${colors[Math.floor(Math.random() * colors.length)]};
-                    animation-duration:${Math.random() * 9 + 6}s;
-                    animation-delay:${Math.random() * 6}s;
-                    border:1px solid rgba(255,255,255,0.35);
-                    backdrop-filter:blur(2px);
-                `;
-                screen.appendChild(p);
-            }
-        })();
-
+        // ============================================================
+        //  START
+        // ============================================================
         function startPresentation() {
-            document.getElementById('startScreen').style.opacity = '0';
-            setTimeout(() => document.getElementById('startScreen').style.display = 'none', 600);
+            const ss = document.getElementById('startScreen');
+            ss.style.opacity = '0';
+            setTimeout(() => { ss.style.display = 'none'; }, 500);
             buildOverviewGrid();
-            const dummyAudio = new Audio();
-            dummyAudio.play().catch(e => {});
-            setTimeout(() => { initSlide(); }, 300);
+            buildSlideDots();
+            setTimeout(() => { initSlide(); }, 500);
         }
 
+        // ============================================================
+        //  MEDIA UTILITIES
+        // ============================================================
         function stopAllMediaAndSpeech() {
             document.querySelectorAll('video').forEach(vid => {
-                vid.pause(); vid.currentTime = 0; vid.classList.remove('video-blurred');
+                vid.pause(); vid.currentTime = 0;
+                vid.classList.remove('video-blurred');
             });
             document.querySelectorAll('audio').forEach(aud => {
                 aud.pause(); aud.currentTime = 0;
             });
             clearInterval(timerInterval);
+            timerInterval = null;
             document.getElementById('timerFill').style.transform = 'scaleX(0)';
             document.getElementById('timeText').innerText = '--';
         }
 
+        // Pause without resetting – used when opening modal
+        function pauseCurrentSlideMedia() {
+            const cur = slides[currentSlide];
+            const voice = cur.querySelector('.voiceover');
+            const vid   = cur.querySelector('video');
+            const bgMusic = cur.querySelector('.bg-music');
+
+            modalState.voiceWasPlaying  = voice   && !voice.paused   && !voice.ended;
+            modalState.vidWasPlaying    = vid     && !vid.paused     && !vid.ended;
+            modalState.musicWasPlaying  = bgMusic && !bgMusic.paused && !bgMusic.ended;
+            modalState.timerWasRunning  = timerInterval !== null;
+            modalState.savedTimeLeft    = timeLeft;
+
+            if (voice)   voice.pause();
+            if (vid)     vid.pause();
+            if (bgMusic) bgMusic.pause();
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        // Resume after closing modal (without slide jump)
+        function resumeCurrentSlideMedia() {
+            if (isPaused) return;
+            const cur = slides[currentSlide];
+            const voice   = cur.querySelector('.voiceover');
+            const vid     = cur.querySelector('video');
+            const bgMusic = cur.querySelector('.bg-music');
+
+            if (modalState.voiceWasPlaying && voice && !voice.ended) {
+                voice.play().catch(e => {});
+                updateStatus("Đang thuyết trình...", "Đọc...");
+                return;
+            }
+            if (modalState.vidWasPlaying && vid && !vid.ended) {
+                vid.play().catch(e => {});
+                if (modalState.musicWasPlaying && bgMusic && !bgMusic.ended) bgMusic.play().catch(e => {});
+                updateStatus("Đang phát Video...", "Video");
+                return;
+            }
+            if (modalState.timerWasRunning && modalState.savedTimeLeft > 0) {
+                timeLeft = modalState.savedTimeLeft;
+                resumeWaitTimer();
+                return;
+            }
+            // Fallback: reinit slide
+            initSlide();
+        }
+
+        // ============================================================
+        //  SLIDE INIT
+        // ============================================================
         function initSlide() {
             stopAllMediaAndSpeech();
             slides.forEach(s => s.classList.remove('active'));
@@ -1000,14 +948,8 @@
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> Tạm Dừng';
             document.getElementById('slideCounter').textContent = currentSlide + 1;
             document.getElementById('slideNumber').textContent = (currentSlide + 1) + ' / ' + slides.length;
-
-            const titleEl = document.getElementById('slideTitleInfo');
-            if (titleEl) titleEl.textContent = slideTitles[currentSlide] || '';
-
             updateDashboard();
-
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-tab')[0].classList.add('active');
+            updateSlideDots();
 
             setTimeout(() => {
                 const slide = slides[currentSlide];
@@ -1017,145 +959,231 @@
                 } else {
                     handleAudioSlide(slide);
                 }
-            }, 50);
+            }, 55);
         }
 
+        // ============================================================
+        //  AUDIO SLIDE
+        // ============================================================
         function handleAudioSlide(slide) {
             const voice = slide.querySelector('.voiceover');
             if (voice) {
-                updateStatus('Đang thuyết trình...', 'Đọc...');
+                updateStatus("Đang thuyết trình...", "Đọc...");
                 voice.currentTime = 0;
                 voice.onerror = () => { startWaitTimer(); };
                 voice.onended = () => { startWaitTimer(); };
                 if (!isPaused) {
-                    let playPromise = voice.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(e => { updateStatus('Lỗi Audio / Bấm Play', 'Lỗi'); });
-                    }
+                    voice.play().catch(e => { updateStatus("Bấm Play thủ công", "Lỗi Audio"); startWaitTimer(); });
                 }
             } else {
                 startWaitTimer();
             }
         }
 
+        // ============================================================
+        //  VIDEO SLIDE – FIX: sync bgMusic when seeking video
+        // ============================================================
         function handleVideoSlide(slide) {
-            const vid = slide.querySelector('video');
+            const vid     = slide.querySelector('video');
             const bgMusic = slide.querySelector('.bg-music');
-            const voice = slide.querySelector('.voiceover');
+            const voice   = slide.querySelector('.voiceover');
+
             vid.classList.add('video-blurred');
+
+            // ✅ FIX: Sync background music currentTime whenever video is seeked
+            vid.onseeking = () => {
+                if (bgMusic) bgMusic.currentTime = vid.currentTime;
+            };
+
             if (voice) {
-                updateStatus('Đang đọc giới thiệu...', 'Đọc...');
+                updateStatus("Đang đọc giới thiệu...", "Đọc...");
                 voice.currentTime = 0;
-                voice.onerror = () => { voice.onended(); };
-                voice.onended = () => {
+                voice.onerror  = () => { voice.onended(); };
+                voice.onended  = () => {
                     vid.classList.remove('video-blurred');
-                    updateStatus('Đang phát Video...', 'Video');
+                    updateStatus("Đang phát Video...", "Video");
                     if (!isPaused && slide.classList.contains('active')) {
                         vid.play().catch(e => {});
                         if (bgMusic) bgMusic.play().catch(e => {});
                     }
                 };
                 if (!isPaused) {
-                    let playPromise = voice.play();
-                    if (playPromise !== undefined) playPromise.catch(e => { updateStatus('Bấm Play thủ công', 'Lỗi'); });
+                    voice.play().catch(e => { updateStatus("Bấm Play thủ công", "Lỗi Audio"); });
                 }
             } else {
                 vid.classList.remove('video-blurred');
-                updateStatus('Đang phát Video...', 'Video');
-                if (!isPaused) { vid.play().catch(e => {}); if (bgMusic) bgMusic.play().catch(e => {}); }
+                updateStatus("Đang phát Video...", "Video");
+                if (!isPaused) {
+                    vid.play().catch(e => {});
+                    if (bgMusic) bgMusic.play().catch(e => {});
+                }
             }
+
             vid.onended = () => { startWaitTimer(); };
         }
 
+        // ============================================================
+        //  TIMER
+        // ============================================================
         function startWaitTimer() {
             timeLeft = WAIT_TIME;
-            updateStatus('Sắp chuyển trang...', 'Đợi...');
+            runTimer();
+        }
+
+        function resumeWaitTimer() {
+            runTimer();
+        }
+
+        function runTimer() {
+            updateStatus("Sắp chuyển trang...", timeLeft / 1000 + 's');
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!isPaused) {
                     timeLeft -= 100;
-                    let sec = Math.ceil(timeLeft / 1000);
+                    const sec = Math.ceil(timeLeft / 1000);
                     document.getElementById('timeText').innerText = sec + 's';
-                    let pct = Math.max(0, timeLeft / WAIT_TIME);
+                    const pct = Math.max(0, timeLeft / WAIT_TIME);
                     document.getElementById('timerFill').style.transform = `scaleX(${pct})`;
-                    if (timeLeft <= 0) { clearInterval(timerInterval); autoNextSlide(); }
+                    if (timeLeft <= 0) { clearInterval(timerInterval); timerInterval = null; autoNextSlide(); }
                 }
             }, 100);
         }
 
+        // ============================================================
+        //  STATUS & DASHBOARD
+        // ============================================================
         function updateStatus(longText, shortText) {
-            document.getElementById('slideStatus').innerText = longText;
+            document.getElementById('slideStatus').innerHTML = `<span class="status-dot"></span> ${longText}`;
             document.getElementById('timeText').innerText = shortText;
         }
 
         function updateDashboard() {
-            const percent = Math.round(((currentSlide + 1) / slides.length) * 100);
-            document.getElementById('progressPercent').textContent = percent + '%';
-            document.getElementById('progressFill').style.strokeDasharray = (percent / 100 * 376) + ' 376';
+            const pct = Math.round(((currentSlide + 1) / slides.length) * 100);
+            document.getElementById('progressPercent').textContent = pct + '%';
+            document.getElementById('progressFill').style.strokeDasharray = (pct / 100 * 376) + ' 376';
         }
 
+        function buildSlideDots() {
+            const wrap = document.getElementById('slideDots');
+            wrap.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'slide-dot';
+                dot.title = slideTitles[i] || ('Slide ' + (i + 1));
+                dot.onclick = () => { currentSlide = i; initSlide(); };
+                wrap.appendChild(dot);
+            });
+        }
+
+        function updateSlideDots() {
+            const dots = document.querySelectorAll('.slide-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('done', 'current');
+                if (i < currentSlide) dot.classList.add('done');
+                else if (i === currentSlide) dot.classList.add('current');
+            });
+        }
+
+        // ============================================================
+        //  NAVIGATION
+        // ============================================================
         function autoNextSlide() {
-            if (currentSlide < slides.length - 1) { currentSlide++; initSlide(); }
-            else { updateStatus('Đã Hoàn Thành!', 'Hết'); document.getElementById('controlBar').style.display = 'none'; }
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                initSlide();
+            } else {
+                updateStatus("Đã Hoàn Thành! 🎉", "Hết");
+                document.getElementById('timerFill').style.transform = 'scaleX(0)';
+            }
         }
 
         function forceNextSlide() {
             if (currentSlide >= slides.length - 1) return;
-            currentSlide++; initSlide();
+            currentSlide++;
+            initSlide();
         }
 
         function forcePrevSlide() {
             if (currentSlide > 0) { currentSlide--; initSlide(); }
         }
 
+        // ============================================================
+        //  PLAY / PAUSE
+        // ============================================================
         function togglePlayPause() {
             isPaused = !isPaused;
-            document.getElementById('playPauseBtn').innerHTML = isPaused ? '<i class="fas fa-play"></i> Tiếp Tục' : '<i class="fas fa-pause"></i> Tạm Dừng';
+            document.getElementById('playPauseBtn').innerHTML = isPaused
+                ? '<i class="fas fa-play"></i> Tiếp Tục'
+                : '<i class="fas fa-pause"></i> Tạm Dừng';
 
-            const cur = slides[currentSlide];
-            const voice = cur.querySelector('.voiceover');
-            const vid = cur.querySelector('video');
+            const cur     = slides[currentSlide];
+            const voice   = cur.querySelector('.voiceover');
+            const vid     = cur.querySelector('video');
             const bgMusic = cur.querySelector('.bg-music');
 
             if (isPaused) {
-                if (voice) voice.pause();
-                if (vid) vid.pause();
+                if (voice)   voice.pause();
+                if (vid)     vid.pause();
                 if (bgMusic) bgMusic.pause();
             } else {
                 if (cur.getAttribute('data-type') !== 'video') {
-                    if (voice && !voice.ended && voice.currentTime > 0) voice.play();
+                    if (voice && !voice.ended && voice.currentTime > 0) voice.play().catch(e => {});
+                    else if (voice && voice.ended) startWaitTimer();
                 } else {
                     if (voice && !voice.ended && voice.currentTime > 0) {
-                        voice.play();
+                        voice.play().catch(e => {});
                     } else if (vid && !vid.ended && !vid.classList.contains('video-blurred')) {
-                        vid.play();
-                        if (bgMusic) bgMusic.play();
+                        vid.play().catch(e => {});
+                        if (bgMusic) bgMusic.play().catch(e => {});
                     }
                 }
             }
         }
 
+        // ============================================================
+        //  FULLSCREEN
+        // ============================================================
         function toggleFullScreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-            else if (document.exitFullscreen) document.exitFullscreen();
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fsIcon').className = 'fas fa-compress';
+            } else {
+                document.exitFullscreen();
+                document.getElementById('fsIcon').className = 'fas fa-expand';
+            }
         }
+        document.addEventListener('fullscreenchange', () => {
+            const icon = document.getElementById('fsIcon');
+            if (icon) icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+        });
 
-        document.addEventListener('keydown', e => {
+        // ============================================================
+        //  KEYBOARD
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') forceNextSlide();
             else if (e.key === 'ArrowLeft') forcePrevSlide();
             else if (e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); togglePlayPause(); }
+            else if (e.key === 'Escape' && document.getElementById('overviewModal').classList.contains('active')) {
+                closeModal('overviewModal');
+            }
         });
 
+        // ============================================================
+        //  MODAL – ✅ FIX: pause/resume instead of stop/restart
+        // ============================================================
         function openModal(id) {
             document.getElementById(id).classList.add('active');
-            stopAllMediaAndSpeech();
+            // Only pause, do NOT reset currentTime
+            pauseCurrentSlideMedia();
         }
 
         function closeModal(id) {
             document.getElementById(id).classList.remove('active');
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab')[0].classList.add('active');
-            initSlide();
+            // Resume from where we left off – do NOT call initSlide()
+            resumeCurrentSlideMedia();
         }
 
         function activateTab(el) {
@@ -1163,16 +1191,33 @@
             el.classList.add('active');
         }
 
+        // ============================================================
+        //  OVERVIEW GRID
+        // ============================================================
+        const slideTitles = [
+            'Giới Thiệu', 'Các Bước Tiến Hành', 'Video Thực Hành',
+            'Thành Quả', 'Đánh Giá Tổng Quan', 'Bảng So Sánh',
+            'Thảo Luận', 'Kết Thúc'
+        ];
+
         function buildOverviewGrid() {
             const grid = document.getElementById('overviewGrid');
             grid.innerHTML = '';
             slideTitles.forEach((title, index) => {
                 grid.innerHTML += `
-                    <div class="overview-item" onclick="jumpToSlide(${index})">
+                    <div class="overview-item ${index === currentSlide ? 'current-slide' : ''}"
+                         onclick="jumpToSlide(${index})">
                         <div class="overview-number">${index + 1}</div>
                         <div class="overview-title-text">${title}</div>
-                    </div>
-                `;
+                        <span class="overview-badge-current">▶ Đang chiếu</span>
+                    </div>`;
+            });
+        }
+
+        function updateOverviewGrid() {
+            const items = document.querySelectorAll('.overview-item');
+            items.forEach((item, i) => {
+                item.classList.toggle('current-slide', i === currentSlide);
             });
         }
 
@@ -1181,23 +1226,8 @@
             document.getElementById('overviewModal').classList.remove('active');
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-tab')[0].classList.add('active');
-            initSlide();
-        }
-
-        function saveSettings() {
-            const v1 = document.getElementById('inputVid1').value;
-            const a1 = document.getElementById('inputAud1').value;
-            const v2 = document.getElementById('inputVid2').value;
-
-            if (v1) { document.getElementById('vid1').src = v1; document.getElementById('vid1').load(); }
-            if (a1) { document.getElementById('aud1').src = a1; document.getElementById('aud1').load(); }
-            if (v2) { document.getElementById('vid2').src = v2; document.getElementById('vid2').load(); }
-
-            document.getElementById('settingsModal').classList.remove('active');
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-tab')[0].classList.add('active');
-            showToast('Cập nhật Video/Audio thành công!', 'fa-check-circle', 'var(--accent-green)');
-            initSlide();
+            initSlide();   // Full reinit is correct when jumping to a new slide
+            updateOverviewGrid();
         }
     </script>
 </body>
